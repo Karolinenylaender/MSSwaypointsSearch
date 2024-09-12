@@ -20,8 +20,8 @@ resultsPath = append(currentPath,"/results")
 
 searchProcess = "randomSearch"
 searchProcess = "minDistanceMaxPath"
-ship = "mariner"
-ship = "nspauv"
+%ship = "mariner"
+%ship = "nspauv"
 ship = "remus100"
 
 numMxperiments = 30;
@@ -37,7 +37,7 @@ if searchProcess == "randomSearch"
             save(shipResultsPath, 'Dec', 'Obj', 'Con') 
        end
     elseif ship == "nspauv"
-        for experiement = startExperiment:endExperimentgit  
+        for experiement = startExperiment:endExperiment 
              shipResultsPath = append(resultsPath, "/nspauv/", "randomSearch", "-P", string(N), "-exNum", string(experiement))
             [Dec,Obj,Con] = platemo('algorithm',@RandomSearchPopulation,'problem',@npsauvWaypointsSearch,'N', N, 'maxFE',MaxEvaluation,'save', numPopSaved, 'run', run);
             save(shipResultsPath, 'Dec', 'Obj', 'Con')

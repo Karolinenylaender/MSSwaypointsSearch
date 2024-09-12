@@ -63,22 +63,6 @@ end
 
 
 
-
-%resultsPath = append(basepath,ship,"/", "processedResults/Full-HyperVolume-",searchProcess, string(startExperiment), "-", string(maxExperiments))
-%save(resultsPath, "HV_shipResuls")
-
-  % boxPlot(objs(:,2))
-  %       xlabel("hh")
-  %       ylabel("tt")
-  %       title(append("Generation", generationPath, " experiment number ", string(experimentNumber-300)))
-  % 
-  % 
-  %       boxPlot(objs(:,2))
-  %       xlabel("hh")
-  %       ylabel("tt")
-  %       title(append("Generation", generationPath, " experiment number ", string(experimentNumber-300)))
-  % 
-
 searchProcess = "randomSearch";
 startExperiment = 400;
 maxExperiments = 420;
