@@ -1,7 +1,7 @@
 ## How to run the code 
 
 
-## Setuå
+## Setup
 Make sure that you have the following repos downloaded, and that the their path is known to matlab
 1. MSS
 2. PlatEMO 
@@ -21,9 +21,14 @@ Which
 - number of experiments 
 
 Step 3: 
-Check that the it saves to is correct. This might need to adjusted in the pathEvaluation files
+Check that the it saves to is correct. 
+This might need to adjusted in the pathEvaluation files, but you only need to change the "basepath" variable to suit your path
 
 Step 4:
 run the file multiobjectiveSearch.m
+
+Step 5: 
+Load the results
+Each generation and experiments is saved to a path.
 
 
