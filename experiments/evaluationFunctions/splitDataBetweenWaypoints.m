@@ -21,15 +21,16 @@ function [transitionIndices, pathSegments] = splitDataBetweenWaypoints(pointsMat
 
     end
     
-    % Store the final segment (if any remaining points)
-    % if isempty(pathSegments)
-    %     size(path, 1)
-    %     current_start_idx
-    %     pathSegments
-    % end
-
-    if current_start_idx <= size(path, 1)
-        pathSegments{end} = [pathSegments{end}; path(current_start_idx:size(path, 1),:)];
+    
+        
+    if current_start_idx <= size(path, 1) 
+        if isempty(pathSegments)
+            pathSegments{1} =  path(current_start_idx:size(path, 1),:);
+            transitionIndices = size(path,1);
+        else
+            pathSegments{end} = [pathSegments{end}; path(current_start_idx:size(path, 1),:)];
+            transitionIndices(end) = size(path,1);
+        end
         %pathSegments{end+1} = path(current_start_idx:size(path, 1),:);
     end
    
