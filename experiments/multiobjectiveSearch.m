@@ -2,11 +2,16 @@
 close all
 clear all
 
+addpath("evaluationFunctions")
+addpath("pathGeneration")
+addpath("multiobjectiveSearch")
+addpath("pareto_HV")
+
 
 %% Initialize the problem
 
 algorithm = @NSGAII; % Define the algorithm
-N = 100; % Population size
+N = 10; % Population size
 numGenerations = 10;
 MaxEvaluation = numGenerations*N; %100*N; % Maximum number of evaluations
 run = 1; % Number of runs
@@ -18,7 +23,7 @@ global shipResultsPath;
 currentPath = mfilename('fullpath') %matlab.desktop.editor.getActiveFilename;
 resultsPath = append(currentPath,"/results")
 
-searchProcess = "randomSearch"
+searchProcess = "minDistanceMaxPath"
 searchProcess = "minDistanceMaxPath"
 %ship = "mariner"
 %ship = "nspauv"
