@@ -8,7 +8,7 @@ function [transitionIndices, pathSegments] = splitDataBetweenWaypoints(pointsMat
 
         for pathPoints = current_start_idx:size(path,1)
             dist_to_end =  pdist2(path(pathPoints,:), endPoint);
-
+            
             if dist_to_end < R_switch
                 % store segment indeices
                 transitionIndices = [transitionIndices; pathPoints];
@@ -18,6 +18,10 @@ function [transitionIndices, pathSegments] = splitDataBetweenWaypoints(pointsMat
             end
 
         end
+        if length(transitionIndices) < pointIndex - 1
+            break;
+        end
+      
 
     end
     

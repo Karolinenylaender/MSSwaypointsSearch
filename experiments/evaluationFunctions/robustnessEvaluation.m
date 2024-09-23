@@ -23,29 +23,29 @@ plotPath = false;
 
 
 if searchProcess == "randomSearch"
-    startExperiment = 402;
-    maxExperiments = 421;
-    populationSize = 1000;
-    numGenerations = 1;
+    startExperiment = 1000;
+    maxExperiments = 1000;
+    populationSize = 20;
+    numGenerations = 511;
 else
-    startExperiment = 400;
-    maxExperiments = 424;
-    populationSize = 100; 
-    numGenerations = 10;
+    startExperiment = 1000;
+    maxExperiments = 1000;
+    populationSize = 20; 
+    numGenerations = 511;
 end
 
 basepath =  "/Users/karolinen/Documents/Projects/Projects/Ships/Simulators/experiments/multiobjectiveSearch/results/";
 
 
 for experimentNumber = startExperiment:maxExperiments
-    resultsPath = append(basepath,ship,"/", "processedResults/",searchProcess ,string(experimentNumber))
-    load(resultsPath)
-    experimentsResultsMap = experimentsResults(string(experimentNumber))
-    for generation = 3:3 %1:numGenerations
-        generationPath = append(basepath,ship, "/", searchProcess,"-P", string(populationSize), "-exNum", string(experimentNumber), "-g", string(generation));
+    %resultsPath = append(basepath,ship,"/", "processedResults/",searchProcess ,string(experimentNumber))
+    %load(resultsPath)
+    %experimentsResultsMap = experimentsResults(string(experimentNumber))
+    for generation = 1:numGenerations
+        generationPath = append(basepath,ship, "/", searchProcess,"-P", string(populationSize), "-exNum", string(experimentNumber), "-g", string(generation))
         load(generationPath)
-        generationResults = experimentsResultsMap(string(generation))
-        if size(generationResults,2) == 3
+        %generationResults = experimentsResultsMap(string(generation))
+        %if size(generationResults,2) == 3
            
             if generation == 1
                 intialPath = paths('0');
@@ -58,23 +58,31 @@ for experimentNumber = startExperiment:maxExperiments
             else
                 Dec = Population.decs;
             end
-            generationResults
+            %generationResults
             for individualIndex = 1:size(Dec,1)
                 individual = Dec(individualIndex,:);
                 individualPath = paths(string(individualIndex));
-                [pointsMatrix,wpt] = transformListOfPointToMatrix(individual, ship)
-                pathPerformance = evaluatePath(individualPath, pointsMatrix, R_switch);
-                pathPerformance
+                %fullPath = individualPath('fullPath')
+                pathSegments = individualPath('subPaths');
+                transitionIndices = individualPath('transitionIndices');
+                %[pointsMatrix,wpt] = transformListOfPointToMatrix(individual, ship)
+                pointsMatrix  =  reshape(individual, [3, 6])';
+            
+                pathPerformance = evaluatePath (pathSegments , pointsMatrix, R_switch);
+                if length(transitionIndices) < 5
+                    length(transitionIndices)
+                    pathPerformance
+                end
                 % TODO save this to the path elns
             end
-        end
+        %end
 
     end
 end
 
 
-function pathPerformance = evaluatePath(fullPath, pointsMatrix, R_switch)
-    [transitionIndices, pathSegments] = splitDataBetweenWaypoints(pointsMatrix, R_switch,fullPath);
+function pathPerformance = evaluatePath(pathSegments, pointsMatrix, R_switch)
+    %[transitionIndices, pathSegments] = splitDataBetweenWaypoints(pointsMatrix, R_switch,fullPath);
     curlinesResultsList = [];
     anglesResultsList = [];
     for pathSectionIndex = 1:length(pathSegments)

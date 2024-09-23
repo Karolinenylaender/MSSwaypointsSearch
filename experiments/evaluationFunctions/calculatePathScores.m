@@ -24,6 +24,5 @@
     % missing waypoints
     numMissingWaypoints = size(pointsMatrix,1) - length(transitionIndices);
     
-
     
  end

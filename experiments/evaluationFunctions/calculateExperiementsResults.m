@@ -11,10 +11,10 @@ ship = "npsauv";
 ship = "remus100";
 
 %numExperments = 10
-totalExperiements = 32;
-currentPath = "/Users/karolinen/Documents/Projects/Projects/Ships/Simulators";
-basepath = append(currentPath)
-populationSize = 10;
+% totalExperiements = 32;
+% currentPath = "/Users/karolinen/Documents/Projects/Projects/Ships/Simulators";
+% basepath = append(currentPath)
+% populationSize = 10;
 
 
 N = 100; % Population size
@@ -22,9 +22,8 @@ numGenerations = 1;
 MaxEvaluation = numGenerations*N; %100*N; % Maximum number of evaluations
 
 searchProcess = "randomSearch";
-%searchProcess = "minDistanceMaxPath";
+searchProcess = "minDistanceMaxPath";
 
-ship = "remus100";
 
 initalPoints = waypoints(ship) 
 R_switch = initalPoints.R_switch;
@@ -39,8 +38,8 @@ if searchProcess == "randomSearch"
     populationSize = 1000;
     numGenerations = 1;
 else
-    startExperiment = 401;
-    maxExperiments = 420;
+    startExperiment = 417;
+    maxExperiments = 430;
     populationSize = 100; 
     numGenerations = 10;
 end

@@ -2,20 +2,20 @@
 close all
 clear all
 
-addpath("evaluationFunctions")
-addpath("pathGeneration")
-addpath("multiobjectiveSearch")
-addpath("pareto_HV")
+
 
 
 %% Initialize the problem
 
-algorithm = @NSGAII; % Define the algorithm
+algorithm = @NSGAIIAdapted; % Define the algorithm
 N = 10; % Population size
-numGenerations = 10;
+numGenerations =1000;
 MaxEvaluation = numGenerations*N; %100*N; % Maximum number of evaluations
 run = 1; % Number of runs
 numPopSaved = 0; % Save the result to files (0 - No, 1 - Yes)
+numMxperiments = 30;
+startExperiment = 1;
+endExperiment = startExperiment+numMxperiments;
 
 global shipResultsPath;
 
@@ -29,12 +29,10 @@ searchProcess = "minDistanceMaxPath"
 %ship = "nspauv"
 ship = "remus100"
 
-numMxperiments = 30;
-startExperiment = 400;
-endExperiment = startExperiment+numMxperiments;
+
 
 if searchProcess == "randomSearch"
-    N = 1000; % 10*100
+    N = 1001; % 10*100
     if ship == "mariner"
         for experiement = startExperiment:endExperiment
             shipResultsPath = append(resultsPath, "/mariner/", "randomSearch", "-P", string(N), "-exNum", string(experiement))
@@ -59,20 +57,22 @@ elseif searchProcess == "minDistanceMaxPath"
         
         for experiement = startExperiment:endExperiment
             shipResultsPath = append(resultsPath, "/mariner/", "minDistanceMaxPath", "-P", string(N), "-exNum", string(experiement))
-            [Dec,Obj,Con] = platemo('algorithm',@NSGAII,'problem',@MarinerWaypointSearch,'N', N, 'maxFE',MaxEvaluation,'save', numPopSaved, 'run', run);
+            [Dec,Obj,Con] = platemo('algorithm',@NSGAIIAdapted,'problem',@MarinerWaypointSearch,'N', N, 'maxFE',MaxEvaluation,'save', numPopSaved, 'run', run);
             save(shipResultsPath, 'Dec', 'Obj', 'Con')
         end
     elseif ship == "nspauv"
         for experiement = startExperiment:endExperiment
             shipResultsPath = append(resultsPath, "/nspauv/", "minDistanceMaxPath", "-P", string(N), "-exNum", string(experiement))
-            [Dec,Obj,Con] = platemo('algorithm',@NSGAII,'problem',@npsauvWaypointsSearch,'N', N, 'maxFE',MaxEvaluation,'save', numPopSaved, 'run', run);
+            [Dec,Obj,Con] = platemo('algorithm',@NSGAIIAdapted,'problem',@npsauvWaypointsSearch,'N', N, 'maxFE',MaxEvaluation,'save', numPopSaved, 'run', run);
             save(shipResultsPath, 'Dec', 'Obj', 'Con')
         end
     elseif ship == "remus100"
         for experiement = startExperiment:endExperiment
+            tic
             shipResultsPath = append(resultsPath, "/remus100/", "minDistanceMaxPath", "-P", string(N), "-exNum", string(experiement));
-            [Dec,Obj,Con] = platemo('algorithm',@NSGAII,'problem',@Remus100WaypointsSearch,'N', N, 'maxFE',MaxEvaluation,'save', numPopSaved, 'run', run);
+            [Dec,Obj,Con] = platemo('algorithm',@NSGAIIAdapted,'problem',@Remus100WaypointsSearch,'N', N, 'maxFE',MaxEvaluation,'save', numPopSaved, 'run', run);
             save(shipResultsPath, 'Dec', 'Obj', 'Con')
+            toc
         end
     end
 end

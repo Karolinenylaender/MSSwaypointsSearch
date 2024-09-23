@@ -36,8 +36,10 @@ generationResults = experimentsResults(string(experimentNumber))
 performanceMatrix = []
 for generationKey = 1:length(generationResults.keys)
     performance = generationResults(string(generationKey))
+     
     performanceMatrix = [performanceMatrix; performance]
 end
+
 
 objectivesMatrix = [];
 for generation = 1:numGenerations  
