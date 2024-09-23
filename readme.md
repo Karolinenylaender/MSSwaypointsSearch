@@ -1,34 +1,24 @@
-## How to run the code 
-
-
 ## Setup
-Make sure that you have the following repos downloaded, and that the their path is known to matlab
-1. MSS
-2. PlatEMO 
+Prerequsits: 
+Clone the two github-repostiories: 
+1. PlatEMO: https://github.com/BIMK/PlatEMO/tree/master
+2. MSS: https://github.com/cybergalactic/MSS
 
-Step 1:
-Move the files that lies in file4PlatEMO into PlatEMO
-'Problems' files to under problem
-'Algorithm' files to under NSGAII (small changes to the files)
+Clone this project
+1. Go to the file 'setupProject' and check that the folder names 'MSS' and 'PlatEMO' corresponds with what you have called the PlatEMO and MSS folders
+2. Run the setupProject.m script 
 
-Step 2: 
-Go into the multiobjectiveSearch.m folder
 
-Choose: 
-Which
-- ship
-- search method
-- number of experiments 
+## Run the experiments
+1. Go to the file 'multiobjectiveSearch.m'
+2. Choose between the following
 
-Step 3: 
-Check that the it saves to is correct. 
-This might need to adjusted in the pathEvaluation files, but you only need to change the "basepath" variable to suit your path
+Ship type: "mariner", "nspauv" and "remus100"
+Algorithm type: "random" or "NSGA-ii"
+Number of experiments (default is 30)
+Path to save the data (defaullt is ...)
+Population size (default is 10)
+Number of generations (default is 1000)
 
-Step 4:
-run the file multiobjectiveSearch.m
-
-Step 5: 
-Load the results
-Each generation and experiments is saved to a path.
-
+Example of running:
 
