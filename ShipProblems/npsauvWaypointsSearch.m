@@ -22,6 +22,7 @@ classdef npsauvWaypointsSearch < PROBLEM
             obj.generation = 1;
             obj.pointDimension = 3;
             obj.pathsMap = containers.Map();
+            obj.shipName = "nspauv";
 
         end
         
@@ -29,7 +30,13 @@ classdef npsauvWaypointsSearch < PROBLEM
             if nargin < 2
                 N = obj.N;
             end
-            
+            xinitial =  [0   50  100   0  100, 200  400];
+            yinitial =  [0  200  600 950 1300 1800 2200];
+            zinitial =  [0   10  100 200  200  200  150];
+        
+            InitalPoints = [xinitial(:,2:end)' yinitial(:,2:end)' zinitial(:,2:end)']';
+            obj.initalPoints = InitalPoints(:)'; 
+
             [obj, PopDec] =  generateInitialPopulation(obj);
             Population = obj.Evaluation(PopDec);
 
@@ -39,33 +46,34 @@ classdef npsauvWaypointsSearch < PROBLEM
             PopObj = zeros(obj.N,obj.M);
             for individualIndex = 1:size(PopDec,1)
                 
-               
                 individual = PopDec(individualIndex,:);
                 [fullpath, subPaths, transitionIndices] = performSimulation(individual, obj);
-                 obj.pathsMap(string(individualIndex)) = fullpath;
-
-                [totalDistanceBetweenWaypoints, subPathLength] = evalauteWaypointsAndPath(obj.initialPoints, obj.initialPath, individual, fullpath, subPaths, transitionIndices);
-
+                paths = containers.Map();
+                paths("fullpath") = fullpath;
+                paths("subPaths") = subPaths;
+                paths("transitionIndices") = transitionIndices;
+                obj.pathsMap(string(individualIndex)) =paths;
                 
-                 PopObj(individualIndex,:) = [-subPathLength totalDistanceBetweenWaypoints];
- 
+                [totalDistanceBetweenWaypoints, subPathLength] = evalauteWaypointsAndPath(obj.initialPoints, obj.initialPath, individual, fullpath, subPaths, transitionIndices);
+                PopObj(individualIndex,:) = [-subPathLength totalDistanceBetweenWaypoints];
             end 
+            obj.generationPerformances = [obj.generationPerformances; calculateGenerationOverallPerformance(PopObj)];
+        
         end
 
         function PopCon = CalCon(obj, PopDec)
             % Calculate the matrix of distances between selected points
-            %selPoints = obj.points(selected, :);
             PopCon = ones(size(PopDec,1),1);
             for individualIndex = 1:size(PopDec,1)
                 individual = PopDec(individualIndex,:);
-                numPoints = length(individual)/3;
-                x = individual(1:numPoints);
-                y = individual((numPoints+1):(numPoints*2)); 
-                z = individual((2*numPoints+1):end);
-                selPoints = [x' y' z'];
 
-                PopCon(individualIndex) = round(obj.minDistanceBetweenPoints/2) < min(sqrt( diff(selPoints(:,1)).^2 + diff(selPoints(:,2)).^2 + diff(selPoints(:,3)).^2));
-                PopCon(individualIndex) = PopCon(individualIndex) && any(z < zeros(1,numPoints));
+                numPoints = length(individual)/obj.pointDimension;
+
+                pointsMatrix  =  reshape(individual, [obj.pointDimension, numPoints])';
+                z = pointsMatrix(:,3)';
+
+                PopCon(individualIndex) = round(obj.minDistanceBetweenPoints/2) > min(sqrt( diff(pointsMatrix(:,1)).^2 + diff(pointsMatrix(:,2)).^2 + diff(pointsMatrix(:,3)).^2));
+                PopCon(individualIndex) = PopCon(individualIndex) || any(z < zeros(1,numPoints));
 
                    
             end
@@ -75,24 +83,16 @@ classdef npsauvWaypointsSearch < PROBLEM
         end
         function PopDec = CalDec(obj, PopDec)
             % calDec - Repair multiple invalid solutions
-            %pointDist = ones(size(PopDec,1),1);
             for individualIndex = 1:size(PopDec,1)
                 individual = PopDec(individualIndex,:);
-                numPoints = length(individual)/3;
-                x = individual(1:numPoints);
-                y = individual((numPoints+1):(numPoints*2)); 
-                z = individual((2*numPoints+1):end);
-                selPoints = [x' y' z'];
+                numPoints = length(individual)/obj.pointDimension;
+
+                pointsMatrix  =  reshape(individual, [obj.pointDimension, numPoints])';
 
 
-                while (pointsToClose(selPoints, obj.minDistanceBetweenPoints) == true ||  all(any(selPoints(1:end-1,:) == selPoints(2:end,:),2)) || any(all(selPoints== [0 0 0],2)) || all(selPoints(:,3) < zeros(numPoints,1))) % && (obj.validPath(individualIndex) ~= 1))
-
-                   
+                while (pointsToClose(pointsMatrix, obj.minDistanceBetweenPoints/2) == true ||  all(any(pointsMatrix(1:end-1,:) == pointsMatrix(2:end,:),2)) || any(all(pointsMatrix== [0 0 0],2)) || all(pointsMatrix(:,3) < zeros(numPoints,1))) % && (obj.validPath(individualIndex) ~= 1))
                     individual = obj.lower + (obj.upper - obj.lower).*rand(1,obj.D);
-                    x = individual(1:numPoints);
-                    y = individual((numPoints+1):(numPoints*2)); 
-                    z = individual((2*numPoints+1):end);
-                    selPoints = [x' y' z'];
+                    pointsMatrix  =  reshape(individual, [obj.pointDimension, numPoints])';
 
                 end
                 PopDec(individualIndex,:) = individual;
@@ -104,120 +104,5 @@ classdef npsauvWaypointsSearch < PROBLEM
     end
 end
 
-function validation = pointsToClose(ListOfpoints, minDistance)
-    numPoints = size(ListOfpoints,1);
-    pointDistances = zeros(1, numPoints);
-    pointDistances(1) = pdist2([0 0 0],ListOfpoints(1,:));
-    for pointIdx = 2:numPoints
-        pointDistances(pointIdx) = pdist2(ListOfpoints(pointIdx-1,:),ListOfpoints(pointIdx,:));
-    end
 
-    if (any(pointDistances < minDistance))
-        validation =  true; 
-    else
-        validation =  false;
-    end
-
-end
-
-
-   function totalSubpathDistances  = calculateSegmentLengths(transitionIndices, fullpath)
-    
-
-    transitionIndices = [1; transitionIndices]; 
-    subPathDistances = zeros(length(transitionIndices)-1,1);
-    for pointIndex = 1:length(transitionIndices)-1
-        startPoint = fullpath(transitionIndices(pointIndex),:);
-        endPoint = fullpath(transitionIndices(pointIndex+1),:);
-        subpathLength = transitionIndices(pointIndex+1) - transitionIndices(pointIndex);
-        pointDistance = pdist2(startPoint,endPoint);
-
-        subPathDistances(pointIndex) = subpathLength/pointDistance;
-    end
-    totalSubpathDistances = sum(subPathDistances);
-
-
-
- end
-
-function [totalDistanceBetweenWaypoints, totalSubpathDistances] = evalauteWaypointsAndPath(initialPoints, intialPath, newPoints, fullpath, subPaths, transitionIndices)
-    %[transitionIndices, pathSegments] = splitDataBetweenWaypoints(newPoints, R_switch,generatedPath);
-    numPoints = length(initialPoints)/3; 
-    xInitial = [0 initialPoints(1:numPoints)]';
-    yInitial = [0 initialPoints((numPoints+1):(numPoints*2))]'; 
-    zInitial = [0 initialPoints((numPoints*2+1):end)]'; 
-    xNew = [0 newPoints(1:numPoints)]';
-    yNew = [0 newPoints((numPoints+1):(numPoints*2))]'; 
-    zNew = [0 newPoints((numPoints*2+1):end)]'; 
-    initialPointsMatrix = [xInitial yInitial zInitial];
-    newPointsMatrix = [xNew yNew zNew];
-
-    % distance between initial and new waypoints 
-    distanceBetweenWaypoints  = zeros(size(newPointsMatrix,1),1);
-    for pointIndex = 1:size(newPointsMatrix,1)
-        distanceBetweenWaypoints(pointIndex) = pdist2(initialPointsMatrix(pointIndex,:), newPointsMatrix(pointIndex,:),'euclidean');
-    end
-    totalDistanceBetweenWaypoints = abs(sum(distanceBetweenWaypoints));
-    
-    
-    transitionIndices = [1; transitionIndices]; 
-    subPathDistances = zeros(length(transitionIndices)-1,1);
-    for pointIndex = 1:length(transitionIndices)-1
-        startPoint = fullpath(transitionIndices(pointIndex),:);
-        endPoint = fullpath(transitionIndices(pointIndex+1),:);
-        subpathLength = transitionIndices(pointIndex+1) - transitionIndices(pointIndex);
-        pointDistance = pdist2(startPoint,endPoint);
-
-        subPathDistances(pointIndex) = subpathLength/pointDistance;
-    end
-    totalSubpathDistances = sum(subPathDistances);
-
-    
-end
-
-
-function [fullpath, subPaths, transitionIndices] = performSimulation(listOfPoints, obj)
-
-     numPoints = length(listOfPoints)/3;
-     wpt.pos.x = [0 listOfPoints(1:numPoints)]';
-     wpt.pos.y = [0 listOfPoints((numPoints+1):(numPoints*2))]';
-     wpt.pos.z = [0 listOfPoints((numPoints*2+1):end)]';
-     pointMatrix = [wpt.pos.x wpt.pos.y wpt.pos.z];
-     [simdata , ~, ~] = npsauvPath(wpt, obj.R_switch);      
-     eta_mutated = simdata(:,17:22);
-     x_mutated = eta_mutated(:,1);
-     y_mutated = eta_mutated(:,2);
-     z_mutated = eta_mutated(:,3);
-     fullpath = [x_mutated y_mutated z_mutated];
-
-
-     [transitionIndices, subPaths] = splitDataBetweenWaypoints(pointMatrix, obj.R_switch,fullpath);
-end
-
-
-
-function [obj, PopDec] =  generateInitialPopulation(obj)
-    xinitial =  [0   50  100   0  100, 200  400];
-    yinitial =  [0  200  600 950 1300 1800 2200];
-    zinitial =  [0   10  100 200  200  200  150];
-    InitalPoints = [xinitial(:,2:end) yinitial(:,2:end) zinitial(:,2:end)];
-
-    
-    [fullpath, subPaths, transitionIndices] = performSimulation(InitalPoints, obj);
-    obj.pathsMap('0') = fullpath;
-    obj.initialPoints = InitalPoints;
-    obj.initialPath = fullpath; 
-    obj.intialSegementDistance =calculateSegmentLengths(transitionIndices, fullpath);
-    obj.lower = InitalPoints - ones(size(InitalPoints))*150;
-    obj.lower(13:end) = obj.lower(13:end)*0;
-    obj.upper = InitalPoints + ones(size(InitalPoints))*150;
-    obj.D = length(InitalPoints);
-    obj.validPath = ones(obj.N, 1);
-
-    
-    randomPopulation = randomizePopulation(obj.N-1,obj.D, obj.minDistanceBetweenPoints, obj.lower, obj.upper, 3);
-    PopDec = [obj.initialPoints; randomPopulation];
-
-    
-end
 
