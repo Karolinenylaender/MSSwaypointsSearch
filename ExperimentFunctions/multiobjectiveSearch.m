@@ -14,8 +14,8 @@ MaxEvaluation = numGenerations*N; %100*N; % Maximum number of evaluations
 run = 1; % Number of runs
 numPopSaved = 0; % Save the result to files (0 - No, 1 - Yes)
 numMxperiments = 30;
-startExperiment = 1;
-endExperiment = startExperiment+numMxperiments;
+startExperiment = 12;
+endExperiment = 30; %startExperiment+numMxperiments;
 
 global shipResultsPath;
 
