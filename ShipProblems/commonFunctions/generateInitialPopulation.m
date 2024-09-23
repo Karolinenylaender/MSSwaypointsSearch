@@ -1,17 +1,20 @@
-function [obj, PopDec] =  generateInitialPopulation(obj)
+function [lower, upper, PopDec] =  generateInitialPopulation(obj)
 
-    [fullpath, ~, transitionIndices] = performSimulation(obj.initalPoints, obj);
+    [fullpath, subPaths, transitionIndices] = performSimulation(obj.initialPoints, obj);
     paths = containers.Map();
     paths("fullpath") = fullpath;
     paths("subPaths") = subPaths;
     paths("transitionIndices") = transitionIndices;
     obj.pathsMap('0') = paths;
 
-    obj.initialPoints = InitalPoints;
     obj.initialPath = fullpath; 
     obj.intialSegementDistance =calculateSegmentLengths(transitionIndices, fullpath);
-
+    
+    numPoints = length(obj.initialPoints)/obj.pointDimension;
+    pointsMatrix  =  reshape(obj.initialPoints, [obj.pointDimension, numPoints])';
     if obj.shipName == "mariner"
+        xinitial = pointsMatrix(:,1);
+        yinitial = pointsMatrix(:,2);
 
         xLower = xinitial - ones(size(xinitial))*400;
         xUpper = xinitial + ones(size(xinitial))*400;
@@ -19,9 +22,15 @@ function [obj, PopDec] =  generateInitialPopulation(obj)
         yLower = yinitial - ones(size(yinitial))*400;
         yUpper = yinitial + ones(size(yinitial))*400;
     
-        obj.lower = [xLower(:,2:end)' yLower(:,2:end)']';
-        obj.upper = [xUpper(:,2:end)' yUpper(:,2:end)']';
+
+        lower = [xLower yLower]';
+        upper = [xUpper yUpper]';
+
     elseif obj.shipName == "remus100" || obj.shipName == "nspauv"
+        xinitial = pointsMatrix(:,1);
+        yinitial = pointsMatrix(:,2);
+        zinitial = pointsMatrix(:,3);
+
         xLower = xinitial - ones(size(xinitial))*150;
         xUpper = xinitial + ones(size(xinitial))*150;
     
@@ -31,21 +40,15 @@ function [obj, PopDec] =  generateInitialPopulation(obj)
         zLower =  zeros(size(zinitial));
         zUpper =  zinitial + ones(size(zinitial))*150;
     
-        obj.lower = [xLower(:,2:end)' yLower(:,2:end)' zLower(:,2:end)']';
-        obj.upper = [xUpper(:,2:end)' yUpper(:,2:end)' zUpper(:,2:end)']';
+        lower = [xLower yLower zLower]';
+        upper = [xUpper yUpper zUpper]';
     end
         
     
-    obj.lower = obj.lower(:)';
-    obj.upper = obj.upper(:)';
-
-    obj.D = length(InitalPoints);
-    obj.validPath = ones(obj.N, 1);
-
-    strategyAitor = true;
-    if strategyAitor 
-        randomAitorPopulation = seedPopulation((obj.N)-1,obj.D, obj.minDistanceBetweenPoints, obj.lower, obj.upper, obj.pointDimension, InitalPoints);
-    end
-    PopDec = [obj.initialPoints; randomAitorPopulation];
+    lower = lower(:)';
+    upper = upper(:)';
+  
+    mutatedPopulation = seedPopulation((obj.N)-1,obj.D, obj.minDistanceBetweenPoints, obj.lower, obj.upper, obj.pointDimension, obj.initialPoints);
+    PopDec = [obj.initialPoints; mutatedPopulation];
 
 end

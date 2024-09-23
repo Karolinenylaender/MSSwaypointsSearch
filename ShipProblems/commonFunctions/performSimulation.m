@@ -38,7 +38,7 @@ function [fullpath, subPaths, transitionIndices] = performSimulation(listOfPoint
     
         
      end
-     [transitionIndices, subPaths] = splitDataBetweenWaypoints(pointMatrix, obj.R_switch,fullpath);
+     [transitionIndices, subPaths] = splitDataBetweenWaypoints(pointsMatrix, obj.R_switch,fullpath);
 
      
 end
