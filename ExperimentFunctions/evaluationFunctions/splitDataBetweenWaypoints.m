@@ -5,7 +5,7 @@ function [transitionIndices, pathSegments] = splitDataBetweenWaypoints(pointsMat
     for pointIndex = 1:length(pointsMatrix) - 1
         %startPoint = pointsMatrix(pointIndex,:);
         endPoint = pointsMatrix(pointIndex+1,:);
-
+        pointNotFound = true;
         for pathPoints = current_start_idx:size(path,1)
             dist_to_end =  pdist2(path(pathPoints,:), endPoint);
             
@@ -14,11 +14,12 @@ function [transitionIndices, pathSegments] = splitDataBetweenWaypoints(pointsMat
                 transitionIndices = [transitionIndices; pathPoints];
                 pathSegments{end+1} = path(current_start_idx:pathPoints,:); % Store the indices of the segment
                 current_start_idx = pathPoints + 1; % Update the start index for the next segment
+                pointNotFound = false;
                 break;
             end
 
         end
-        if length(transitionIndices) < pointIndex - 1
+        if pointNotFound == true
             break;
         end
       
@@ -31,9 +32,14 @@ function [transitionIndices, pathSegments] = splitDataBetweenWaypoints(pointsMat
         if isempty(pathSegments)
             pathSegments{1} =  path(current_start_idx:size(path, 1),:);
             transitionIndices = size(path,1);
-        else
-            pathSegments{end} = [pathSegments{end}; path(current_start_idx:size(path, 1),:)];
-            transitionIndices(end) = size(path,1);
+        else 
+            if pointNotFound == true
+                pathSegments{end+1} = path(current_start_idx:size(path, 1),:);
+                transitionIndices = [transitionIndices; size(path,1)];
+            else
+                pathSegments{end} = [pathSegments{end}; path(current_start_idx:size(path, 1),:)];
+                transitionIndices(end) = size(path,1);
+            end
         end
         %pathSegments{end+1} = path(current_start_idx:size(path, 1),:);
     end
