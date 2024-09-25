@@ -3,7 +3,7 @@ function [lower, upper, PopDec] =  generateInitialPopulation(obj)
     [fullpath, subPaths, transitionIndices] = performSimulation(obj.initialPoints, obj);
     paths = containers.Map();
     paths("fullpath") = fullpath;
-    paths("subPaths") = subPaths;
+    %paths("subPaths") = subPaths;
     paths("transitionIndices") = transitionIndices;
     obj.pathsMap('0') = paths;
 

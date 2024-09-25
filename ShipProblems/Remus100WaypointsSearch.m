@@ -60,7 +60,7 @@ classdef Remus100WaypointsSearch < PROBLEM
                 [fullpath, subPaths, transitionIndices] = performSimulation(individual, obj);
                 paths = containers.Map();
                 paths("fullpath") = fullpath;
-                paths("subPaths") = subPaths;
+                %paths("subPaths") = subPaths;
                 paths("transitionIndices") = transitionIndices;
                 obj.pathsMap(string(individualIndex)) =paths;
                 
