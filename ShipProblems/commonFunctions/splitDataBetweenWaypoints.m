@@ -1,10 +1,10 @@
 function [transitionIndices, pathSegments] = splitDataBetweenWaypoints(pointsMatrix, R_switch,path)
     transitionIndices = []; 
     pathSegments = [];
-    current_start_idx = 1 ;
-    for pointIndex = 1:length(pointsMatrix) - 1
+    current_start_idx = 1;
+    for pointIndex = 1:length(pointsMatrix) 
         %startPoint = pointsMatrix(pointIndex,:);
-        endPoint = pointsMatrix(pointIndex+1,:);
+        endPoint = pointsMatrix(pointIndex,:);
         pointNotFound = true;
         for pathPoints = current_start_idx:size(path,1)
             dist_to_end =  pdist2(path(pathPoints,:), endPoint);
