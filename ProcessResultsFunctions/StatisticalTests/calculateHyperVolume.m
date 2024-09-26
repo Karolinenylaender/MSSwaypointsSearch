@@ -33,8 +33,10 @@ for experimentNumber = startExperiment:maxExperiments
     
     for generation = 1:numGenerations
         
-        generationPath = append(basepath,ship, "/", searchProcess,"-P", string(populationSize), "-exNum", string(experimentNumber), "-g", string(generation));
-        load(generationPath)
+        %generationPath = append(basepath,ship, "/", searchProcess,"-P", string(populationSize), "-exNum", string(experimentNumber), "-g", string(generation));
+        %load(generationPath)
+        [Population, paths] = loadResults(ship, searchProcess, experimentNumber, populationSize, generation);
+
         
         objs = Population.objs;  
         objectivesForAllGenerations = [objectivesForAllGenerations; objs];

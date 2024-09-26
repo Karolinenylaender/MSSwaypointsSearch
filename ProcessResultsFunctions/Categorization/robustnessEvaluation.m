@@ -26,12 +26,8 @@ for experimentNumber = startExperiment:maxExperiments
     
     for generation = 1:numGenerations
         [Population, paths] = loadResults(ship, searchProcess, experimentNumber, populationSize, generation);
-        %generationPath = append(basepath,ship, "/", searchProcess,"-P", string(populationSize), "-exNum", string(experimentNumber), "-g", string(generation))
-        %generationPath = "/Users/karolinen/Documents/MATLAB/Simulators/ExperimentFunctions/multiobjectiveSearch/results/remus100/exNum11-19/minDistanceMaxPath-P10-exNum19-g931" %append(basepath,ship, "/", searchProcess,"-P", string(populationSize), "-exNum", string(experimentNumber), "-g", string(generation))
       
-        %load(generationPath);
         Dec = Population.decs;
-        %load(NextgenerationPath);
            
         % if generation == 1
         %     intialPath = paths('0');
@@ -51,9 +47,8 @@ for experimentNumber = startExperiment:maxExperiments
             individual = Dec(individualIndex,:);
             individualPath = paths(string(individualIndex));
             fullPath = individualPath('fullpath');
-            %pathSegments = individualPath('subPaths');
             transitionIndices = individualPath('transitionIndices');
-            %[pointsMatrix,wpt] = transformListOfPointToMatrix(individual, ship)
+
             pointsMatrix  =  reshape(individual, [3, 6])';
         
             pathPerformance = evaluatePath(fullPath, transitionIndices , pointsMatrix, R_switch);
@@ -70,7 +65,6 @@ for experimentNumber = startExperiment:maxExperiments
                 pathPerformance = pathPerformance; %evaluatePath(pathSegments , pointsMatrix, R_switch);
 
             end
-            % TODO save this to the path elns
             generationPerformance = [generationPerformance; pathPerformance];
         end
         experimentPerformance =[experimentPerformance; generationPerformance];

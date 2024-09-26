@@ -34,7 +34,7 @@ else
     numGenerations = 1000;
 end
 
-basepath = "/Users/karolinen/Documents/MATLAB/Simulators/ExperimentFunctions/multiobjectiveSearch/results/";
+%basepath = "/Users/karolinen/Documents/MATLAB/Simulators/ExperimentFunctions/multiobjectiveSearch/results/";
 
 
 %experimentPerformance = [];
@@ -45,10 +45,11 @@ generationIdx = []
 for experimentNumber = startExperiment:maxExperiments
     
     for generation = 1:numGenerations
-        generationPath = append(basepath,ship, "/", searchProcess,"-P", string(populationSize), "-exNum", string(experimentNumber), "-g", string(generation))
+        %generationPath = append(basepath,ship, "/", searchProcess,"-P", string(populationSize), "-exNum", string(experimentNumber), "-g", string(generation))
         %generationPath = "/Users/karolinen/Documents/MATLAB/Simulators/ExperimentFunctions/multiobjectiveSearch/results/remus100/exNum11-19/minDistanceMaxPath-P10-exNum19-g931" %append(basepath,ship, "/", searchProcess,"-P", string(populationSize), "-exNum", string(experimentNumber), "-g", string(generation))
       
-        load(generationPath);
+        %load(generationPath);
+        [Population, paths] = loadResults(ship, searchProcess, experimentNumber, populationSize, generation);
         
            
         

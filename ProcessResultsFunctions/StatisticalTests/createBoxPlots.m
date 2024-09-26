@@ -42,8 +42,10 @@ for experimentNumber = startExperiment:maxExperiments
     
     for generation = 1:numGenerations
         
-        generationPath = append(basepath,ship, "/", searchProcess,"-P", string(populationSize), "-exNum", string(experimentNumber), "-g", string(generation));
-        load(generationPath)
+        %generationPath = append(basepath,ship, "/", searchProcess,"-P", string(populationSize), "-exNum", string(experimentNumber), "-g", string(generation));
+        %load(generationPath)
+        [Population, paths] = loadResults(ship, searchProcess, experimentNumber, populationSize, generation);
+
         
         objs = Population.objs;
         objectivesMatrix = [objectivesMatrix; objs(:,objective)];
@@ -73,8 +75,10 @@ for experimentNumber = startExperiment:maxExperiments
     generation = 1;
 
     
-    generationPath = append(basepath,ship, "/", searchProcess,"-P", string(populationSize), "-exNum", string(experimentNumber), "-g", string(generation));
-    load(generationPath)
+    %generationPath = append(basepath,ship, "/", searchProcess,"-P", string(populationSize), "-exNum", string(experimentNumber), "-g", string(generation));
+    %load(generationPath)
+    [Population, paths] = loadResults(ship, searchProcess, experimentNumber, populationSize, generation);
+
     
     objs = Population.objs;
     %objectivesMatrix =  objs(:,objective);

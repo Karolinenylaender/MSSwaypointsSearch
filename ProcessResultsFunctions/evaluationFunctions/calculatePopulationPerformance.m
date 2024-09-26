@@ -77,8 +77,10 @@ for experiement = startExperiment:maxExperiments
 
     generationResults = containers.Map();
     for gen = 1:numGenerations
-        generationPath = append(shipResultsPath, "-g", string(gen));
-        load(generationPath,"Population");
+        %generationPath = append(shipResultsPath, "-g", string(gen));
+        %load(generationPath,"Population");
+        [Population, paths] = loadResults(ship, searchProcess, experimentNumber, populationSize, generation);
+
         
         if searchProcess == "minMax"
             Dec = Population.decs;
