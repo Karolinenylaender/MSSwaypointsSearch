@@ -48,11 +48,11 @@ To run one experiment you can call the function
 Inside the folder 'ExperiementsResults' there is a folder for each ship. 
 The name of each file indicates the type of search that is performed
 > e.g ExperiementsResults/remus100/minDistanceMaxPath-P10-exNum51-g2 is the results for
-> ship = remus100
-> search method: minDistanceMaxPath
-> population size: 10
-> experiment number 50
-> generation number: 2 
+> * ship = remus100
+> * search method: minDistanceMaxPath
+> * population size: 10
+> * experiment number 50
+> * generation number: 2 
 
 Loading this file you can find: 
 * 'Population': the Population for the current generation
