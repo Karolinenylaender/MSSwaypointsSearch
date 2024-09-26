@@ -10,26 +10,38 @@ Clone this project
 
 
 ## Run the experiments
-1. Go to the file 'multiobjectiveSearch.m'
-2. Choose between the following
+1. Go to the file 'runExperiments.m'
+2. In the file you can choose
 - Ship type: "mariner", "nspauv" and "remus100"
-- Algorithm type: "random" or "NSGA-ii"
+- Algorithm type: "randomSearch" or "NSGA-ii"
 - Number of experiments (default is 30)
-- Path to save the data (defaullt is ...)
+- Path to save the data (defaullt is the folder ExperimentsResults/)
 - Population size (default is 10)
 - Number of generations (default is 1000)
 
-Example of running:
-    >>> multobjecte (22 )
- 
+To run one experiment you can call the function
+ performSearch(ship, searchProcess, resultsPath, experimentNumber, numGenerations, populationSize)
+
+# Structure of experiments
+Inside the folder 'ExperiementsResults' there is a folder for each ship. 
+The name of each file indicates the type of search that is performed
+e.g ExperiementsResults/remus100/minDistanceMaxPath-P10-exNum51-g2 is the results for
+- ship = remus100
+- search method: minDistanceMaxPath
+- population size: 10
+- experiment number 50
+- generation number: 2 
+
+Loading this file you can find: 
+- 'Population': the Population for the current generation
+- 'Path': a map that cointains the 'fullpath' and 'transitionIndices' for each individual in the population. 
+
 
 ## Evaluate experiments
-Located inside folder
-ExperimentsFunctions:
+Located inside folder ProcessResultsFolder:
 - categorize path
 - evaluationFunction
 - robustNess
-
 
 
 # Folder structure
