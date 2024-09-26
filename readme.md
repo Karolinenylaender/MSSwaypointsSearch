@@ -51,7 +51,7 @@ The name of each file indicates the type of search that is performed
 > * ship = remus100
 > * search method: minDistanceMaxPath
 > * population size: 10
-> * experiment number 50
+> * experiment number 51
 > * generation number: 2 
 
 Loading this file you can find: 
@@ -67,15 +67,21 @@ Located inside folder ProcessResultsFolder:
 
 
 ## Folder structure
-1. NSGA-II-Adapted 
-> Contains the adapted NSGA-II and random search functions
-> GArealPoints performs crossover where the points (x,y) or (x,y,z) are moved together
+# ShipProblems/
+* userproblem for each ship: npsauvWaypointsSearch, Remus100WaypointsSearch and MarinerWaypointSearch
+* commonFunctions/
+* * calculateSegmentLengths.m
+* * evalauteWaypointsAndPath.m
+* * generateInitialPopulation.m
+* * performSimulation.m
+* * pointsToClose.m
+* * splitDataBetweenWaypoints.m
+* * pathGeneration/ paths for each ship
 
-2. ShipProblems - Contains the userProblems defined each ship
-- /commenFunctions - contains the common functions utilized by each ship
-    - calculate SegmentLength 
-    - evalauteWaypointsAndPath
-    - generateinitialPopulation
-    - performSimulation 
-    - poinsToClose
-    - /pathGeneration - generates the paths for each ship
+# NSGA-II-Adapted/
+* EnvironmentalSelection.m 
+* GArealPoints.m performs crossover where the points (x,y) or (x,y,z) are moved together
+* NSGAIIAdapted.m
+* RandomSearchPopulation.m
+* savePopulation.m
+
