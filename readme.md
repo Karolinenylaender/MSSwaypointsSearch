@@ -1,6 +1,6 @@
 
-## Usage Guide
-# Step 1: Installation
+# Usage Guide
+## Step 1: Installation
 Clone the two github-repostiories: 
 1. PlatEMO: https://github.com/BIMK/PlatEMO/tree/master
 2. MSS: https://github.com/cybergalactic/MSS
@@ -14,7 +14,7 @@ git clone https://github.com/cybergalactic/MSS
 git clone https://github.com/Karolinenylaender/MSSwaypointsSearch
 ```
 
-# Step 2: Set the correct matlab files
+## Step 2: Set the correct matlab files
 
 1. Go to the file 'setupProject' and check that the folder names 'MSS' and 'PlatEMO' corresponds with what you have called the PlatEMO and MSS folders
 ```
@@ -28,7 +28,7 @@ setupProject.m
 ```
 
 
-# Step 3:  Run the experiments
+## Step 3:  Run the experiments
 1. Go to the file 'runExperiments.m'
 2. In the file you can choose
 * Ship type: "mariner", "nspauv" and "remus100"
@@ -43,7 +43,7 @@ To run one experiment you can call the function
  performSearch(ship, searchProcess, resultsPath, experimentNumber, numGenerations, populationSize)
 ```
 
-# Step 4: Evaluate the generated waypoints and paths 
+## Step 4: Evaluate the generated waypoints and paths 
 *Structure of experiments*
 Inside the folder 'ExperiementsResults' there is a folder for each ship. 
 The name of each file indicates the type of search that is performed
@@ -61,13 +61,16 @@ Loading this file you can find:
 
 *Evaluate experiments*
 Located inside folder ProcessResultsFolder:
+* pareto_HV/
+* evaluationFunctions/
+* * 
+
 * categorize path
 * evaluationFunction
 * robustNess
 
-
-## Folder structure
-# ShipProblems/
+# Folder structure
+## ShipProblems/
 * userproblem for each ship: npsauvWaypointsSearch, Remus100WaypointsSearch and MarinerWaypointSearch
 * commonFunctions/
 * * calculateSegmentLengths.m
@@ -76,9 +79,10 @@ Located inside folder ProcessResultsFolder:
 * * performSimulation.m
 * * pointsToClose.m
 * * splitDataBetweenWaypoints.m
-* * pathGeneration/ paths for each ship
+* * pathGeneration/ 
+* * *paths for each ship
 
-# NSGA-II-Adapted/
+## NSGA-II-Adapted/
 * EnvironmentalSelection.m 
 * GArealPoints.m performs crossover where the points (x,y) or (x,y,z) are moved together
 * NSGAIIAdapted.m

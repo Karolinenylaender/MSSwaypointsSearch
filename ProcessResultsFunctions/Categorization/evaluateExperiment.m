@@ -1,18 +1,18 @@
 close all
 clear all
 
+exNum = 1;
+maxGen = 224 %1000;
+populationSize = 10;
+numWaypoints = 6;
+searchProcess = "minDistanceMaxPath";
+ship = "remus100";
 
-basepath = "/Users/karolinen/Documents/MATLAB/Simulators/ExperimentFunctions/multiobjectiveSearch/results/remus100/minDistanceMaxPath-P"
-exNum = 20;
-maxGen = 1000;
-PopulationSize = 10;
-numWaypoints = 5;
-
-AverageMissingWayPoints = zeros(maxGen,numWaypoints+1)
-totalObjectives = []
+AverageMissingWayPoints = zeros(maxGen,numWaypoints+1);
+totalObjectives = [];
 for generation = 1:maxGen
-    generationPath = append(basepath,string(PopulationSize), "-exNum", string(exNum),"-g" , string(generation));
-    load(generationPath);
+
+    [Population, paths] = loadResults(ship, searchProcess, exNum, populationSize, generation);
     objectives = Population.objs;
     
     missingWaypoints = zeros(1,numWaypoints+1);

@@ -5,7 +5,7 @@ addFolderToPath("MSS")
 addFolderToPath("ShipProblems")
 addFolderToPath("NSGA-II-Adapted/")
 
-addFolderToPath("ProsessResults/")
+addFolderToPath("ProcessResultsFunctions/")
 addFolderToPath("ExperimentsResults")
 
 savepath;
@@ -24,5 +24,4 @@ function addFolderToPath(folderName)
     else
         fprintf("Did not find folder %s \n", folderName);
     end
-    
 end
