@@ -3,13 +3,14 @@ classdef MarinerWaypointSearch < PROBLEM
         Delta_h = 500;                   % Look-ahead distance
         R_switch = 400;                  % Radius of switching circle
         minDistanceBetweenPoints
-        validPath
+        %validPath
         initialPoints
-        intialSegementDistance
+        %intialSegementDistance
         initialPath
         generation
         pointDimension
         pathsMap
+        shipName = "mariner"
     end
     methods
         function Setting(obj)
@@ -22,22 +23,29 @@ classdef MarinerWaypointSearch < PROBLEM
             obj.generation = 1;
             obj.pointDimension = 2;
             obj.pathsMap = containers.Map();
-            obj.generationPerformances = [];
+            %obj.generationPerformances = [];
             obj.shipName = "mariner";
         end
 
-        function Population = Initialization(obj,N)
+        function Population = Initialization(obj,N, populationType)
             if nargin < 2
                 N = obj.N;
+                populationType = "normal"
+            elseif nargin < 3
+                obj.N = N;
+                populationType = "normal"
             end
+            populationType = populationType;
+
             xinitial =  [0  2000 5000 3000 6000 10000];
             yinitial =  [0  0 5000  8000 12000 12000];
             InitalPoints = [xinitial(:,2:end)' yinitial(:,2:end)']';
             InitalPoints = InitalPoints(:)'; 
-
             obj.initialPoints = InitalPoints;
-            
-            [obj, PopDec] =  generateInitialPopulation(obj);
+            obj.D = length(obj.initialPoints);
+            [lower, upper, PopDec] =  generateInitialPopulation(obj,populationType);
+            obj.lower = lower;
+            obj.upper = upper;
             Population = obj.Evaluation(PopDec);
             
 
@@ -51,7 +59,7 @@ classdef MarinerWaypointSearch < PROBLEM
                  [fullpath, subPaths, transitionIndices] = performSimulation(individual, obj);
                  paths = containers.Map();
                  paths("fullpath") = fullpath;
-                 paths("subPaths") = subPaths;
+                 %paths("subPaths") = subPaths;
                  paths("transitionIndices") = transitionIndices;
                  obj.pathsMap(string(individualIndex)) =paths;
 
@@ -60,7 +68,7 @@ classdef MarinerWaypointSearch < PROBLEM
                  PopObj(individualIndex,:) = [-subPathLength totalDistanceBetweenWaypoints]; 
                  
             end
-            obj.generationPerformances = [obj.generationPerformances; calculateGenerationOverallPerformance(PopObj)];
+            %obj.generationPerformances = [obj.generationPerformances; calculateGenerationOverallPerformance(PopObj)];
 
 
         end
@@ -82,10 +90,10 @@ classdef MarinerWaypointSearch < PROBLEM
             % calDec - Repair multiple invalid solutions;
             for individualIndex = 1:size(PopDec,1)
                 individual = PopDec(individualIndex,:);
-                numPoints = length(individual)/2;
+                numPoints = length(individual)/obj.pointDimension;
                 pointsMatrix  =  reshape(individual, [obj.pointDimension, numPoints])';
                 
-                while (isPointsToClose(pointsMatrix, obj.minDistanceBetweenPoints) == true ||  all(any(pointsMatrix(1:end-1,:) == pointsMatrix(2:end,:),2)) || any(all(pointsMatrix== [0 0],2)))
+                while (pointsToClose(pointsMatrix, obj.minDistanceBetweenPoints/2) == true ||  all(any(pointsMatrix(1:end-1,:) == pointsMatrix(2:end,:),2)) || any(all(pointsMatrix== [0 0],2)))
                     individual = obj.lower + (obj.upper - obj.lower).*rand(1,obj.D);
                     pointsMatrix  =  reshape(individual, [obj.pointDimension, numPoints])';
 

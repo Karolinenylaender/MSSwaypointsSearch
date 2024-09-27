@@ -3,7 +3,7 @@ classdef RandomSearchPopulation < ALGORITHM
     methods
         function main(Algorithm,Problem)
             %% Generate random population
-            Population = Problem.Initialization(Problem.N+1);
+            Population = Problem.Initialization(Problem.N, "random");
             %Population = Problem.Initialization(1);
             %Offspring = randomizePopulation(Problem.N,Problem.D, Problem.minDistanceBetweenPoints, Problem.lower, Problem.upper, Problem.pointDimension);
             

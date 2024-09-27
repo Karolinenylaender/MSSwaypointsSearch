@@ -1,4 +1,4 @@
-function [lower, upper, PopDec] =  generateInitialPopulation(obj)
+function [lower, upper, PopDec] =  generateInitialPopulation(obj, populationType)
 
     [fullpath, subPaths, transitionIndices] = performSimulation(obj.initialPoints, obj);
     paths = containers.Map();
@@ -8,7 +8,7 @@ function [lower, upper, PopDec] =  generateInitialPopulation(obj)
     obj.pathsMap('0') = paths;
 
     obj.initialPath = fullpath; 
-    obj.intialSegementDistance =calculateSegmentLengths(transitionIndices, fullpath);
+    %obj.intialSegementDistance =calculateSegmentLengths(transitionIndices, fullpath);
     
     numPoints = length(obj.initialPoints)/obj.pointDimension;
     pointsMatrix  =  reshape(obj.initialPoints, [obj.pointDimension, numPoints])';
@@ -47,8 +47,14 @@ function [lower, upper, PopDec] =  generateInitialPopulation(obj)
     
     lower = lower(:)';
     upper = upper(:)';
+
+    if populationType == "random"
+        PopDec = randomizePopulation(obj, lower, upper);
+    else
+        mutatedPopulation = seedPopulation((obj.N)-1,obj.D, obj.minDistanceBetweenPoints, obj.lower, obj.upper, obj.pointDimension, obj.initialPoints);
+        PopDec = [obj.initialPoints; mutatedPopulation];
+    end
   
-    mutatedPopulation = seedPopulation((obj.N)-1,obj.D, obj.minDistanceBetweenPoints, obj.lower, obj.upper, obj.pointDimension, obj.initialPoints);
-    PopDec = [obj.initialPoints; mutatedPopulation];
+    
 
 end

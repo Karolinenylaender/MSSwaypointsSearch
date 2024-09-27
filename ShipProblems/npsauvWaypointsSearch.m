@@ -1,15 +1,16 @@
 classdef npsauvWaypointsSearch < PROBLEM
     properties
-        points
+        %points
         minDistanceBetweenPoints
-        validPath
+        %validPath
         initialPoints 
-        intialSegementDistance
+        %intialSegementDistance
         initialPath
         R_switch = 5
         generation
         pointDimension
         pathsMap
+        shipName = "nspauv"
     end
     methods
         % Default settings of the problem
@@ -26,18 +27,27 @@ classdef npsauvWaypointsSearch < PROBLEM
 
         end
         
-        function Population = Initialization(obj,N)
+        function Population = Initialization(obj,N, populationType)
             if nargin < 2
                 N = obj.N;
+                populationType = "normal"
+            elseif nargin < 3
+                obj.N = N;
+                populationType = "normal"
             end
+            populationType = populationType;
             xinitial =  [0   50  100   0  100, 200  400];
             yinitial =  [0  200  600 950 1300 1800 2200];
             zinitial =  [0   10  100 200  200  200  150];
         
             InitalPoints = [xinitial(:,2:end)' yinitial(:,2:end)' zinitial(:,2:end)']';
-            obj.initalPoints = InitalPoints(:)'; 
+            InitalPoints = InitalPoints(:)'; 
+            obj.initialPoints = InitalPoints;
 
-            [obj, PopDec] =  generateInitialPopulation(obj);
+            obj.D = length(obj.initialPoints);
+            [lower, upper, PopDec] =  generateInitialPopulation(obj,populationType);
+            obj.lower = lower;
+            obj.upper = upper;
             Population = obj.Evaluation(PopDec);
 
         end
@@ -50,14 +60,14 @@ classdef npsauvWaypointsSearch < PROBLEM
                 [fullpath, subPaths, transitionIndices] = performSimulation(individual, obj);
                 paths = containers.Map();
                 paths("fullpath") = fullpath;
-                paths("subPaths") = subPaths;
+                %paths("subPaths") = subPaths;
                 paths("transitionIndices") = transitionIndices;
                 obj.pathsMap(string(individualIndex)) =paths;
                 
                 [totalDistanceBetweenWaypoints, subPathLength] = evalauteWaypointsAndPath(obj.initialPoints, obj.initialPath, individual, fullpath, subPaths, transitionIndices);
                 PopObj(individualIndex,:) = [-subPathLength totalDistanceBetweenWaypoints];
             end 
-            obj.generationPerformances = [obj.generationPerformances; calculateGenerationOverallPerformance(PopObj)];
+            %obj.generationPerformances = [obj.generationPerformances; calculateGenerationOverallPerformance(PopObj)];
         
         end
 

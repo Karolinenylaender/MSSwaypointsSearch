@@ -23,7 +23,7 @@ function [fullpath, subPaths, transitionIndices] = performSimulation(listOfPoint
          fullpath = [x_mutated y_mutated z_mutated];
 
 
-     elseif obj.shipNAme == "nspauv"
+     elseif obj.shipName == "nspauv"
 
          wpt.pos.x  = [0; pointsMatrix(:,1)];
          wpt.pos.y  = [0; pointsMatrix(:,2)];

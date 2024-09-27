@@ -3,6 +3,8 @@ function [Dec,Obj,Con] = performSearch(ship, searchProcess, resultsPath, experim
         algorithm = @NSGAIIAdapted;
     elseif searchProcess == "randomSearch"
         algorithm = @RandomSearchPopulation;
+        populationSize = populationSize*numGenerations;
+        numGenerations = 1;
     end
 
     if ship == "mariner"
