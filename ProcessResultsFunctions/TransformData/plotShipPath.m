@@ -1,4 +1,7 @@
-function plotShipPath(fullPath, pointsMatrix)
+function plotShipPath(fullPath, pointsMatrix, R_switch)
+    if nargin < 2
+        R_switch = 5;
+    end
     close all;
     if size(fullPath,2) == 2
         xpath = fullPath(:,1);
@@ -44,7 +47,7 @@ function plotShipPath(fullPath, pointsMatrix)
         subplot(3,1,3)
         plot3(ypath, xpath, zpath)
         hold on
-        plot3(ypoints, xpoints, zpoints, 'ro', 'MarkerSize', 15);
+        plot3(ypoints, xpoints, zpoints, 'ro', 'MarkerSize', R_switch);
         hold off;
         grid on;
         set(gca, 'ZDir', 'reverse');

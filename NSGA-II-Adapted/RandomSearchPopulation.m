@@ -8,16 +8,18 @@ classdef RandomSearchPopulation < ALGORITHM
             %Offspring = randomizePopulation(Problem.N,Problem.D, Problem.minDistanceBetweenPoints, Problem.lower, Problem.upper, Problem.pointDimension);
             
             %[~,FrontNo,CrowdDis] = EnvironmentalSelection(Population,Problem.N);
-            savePopulation(Problem, Population)
+            Problem  = savePopulation(Problem, Population)
+            numberOfEvaluations = length(Population);
+            Problem.FE = numberOfEvaluations;
 
             %% Optimization
             while Algorithm.NotTerminated(Population)
-                %MatingPool = TournamentSelection(2,Problem.N,FrontNo,-CrowdDis);
-                %Offspring  = OperatorGA(Problem,Population(MatingPool));
-                %Offspring = randomizePopulation(Problem.N,Problem.D, Problem.minDistanceBetweenPoints, Problem.lower, Problem.upper, Problem.pointDimension);
-                %[Population,FrontNo,CrowdDis] = EnvironmentalSelection([Population,Offspring],Problem.N);
-                Problem.FE     = Problem.FE + length(Population);
-                %savePopulation(Problem, Offspring)
+                Population = Problem.Initialization(Problem.N, "random");
+                Problem  = savePopulation(Problem, Population);
+
+                %Problem.FE     = Problem.FE + length(Population);
+                numberOfEvaluations = numberOfEvaluations + length(Population);
+                Problem.FE = numberOfEvaluations;
             end
         end
     end
