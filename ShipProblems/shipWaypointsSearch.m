@@ -1,51 +1,38 @@
-classdef Remus100WaypointsSearch < PROBLEM
+classdef shipWaypointsSearch < PROBLEM
     properties
         minDistanceBetweenPoints
-        %validPath
         initialPoints 
         initialPath
-        R_switch = 5
+        R_switch
         generation
-        %path
         pointDimension
         pathsMap
-        %generationPerformances
-        shipName = "remus100"
+        shipName 
     end
     methods
         % Default settings of the problem
         function Setting(obj)
 
-            obj.minDistanceBetweenPoints = obj.R_switch*2+1;  
             obj.M = 2;                                     % Set number of objectives
-            obj.D = 6*3;                                   % Set number of decision variables
-
-            obj.encoding = ones(obj.D,1);
             obj.generation = 1;
-            obj.pointDimension = 3;
-            obj.pathsMap = containers.Map(); % container to save all the paths for one generation 
-            %obj.generationPerformances = [];
-            %obj.evaluationMap = containers.Map();
+            obj.pathsMap = containers.Map(); 
 
-            obj.shipName = "remus100";
         end
         
-        function Population = Initialization(obj,N, populationType)
-            if nargin < 2
-                N = obj.N;
-                populationType = "normal"
-            elseif nargin < 3
-                obj.N = N;
-                populationType = "normal"
-            end
-            populationType = populationType;
-            xinitial =  [0  -20 -100   0  200, 200  400];
-            yinitial =  [0  200  600 950 1300 1800 2200];
-            zinitial =  [0   10  100 100   50   50   50];
-            InitalPoints = [xinitial(:,2:end)' yinitial(:,2:end)' zinitial(:,2:end)']';
-            InitalPoints = InitalPoints(:)'; 
-            obj.initialPoints = InitalPoints;
+        function Population = Initialization(obj,N, parameters)
+
+            populationType = parameters.populationType; 
+            shipInformation = parameters.shipInformation;
+
+            obj.shipName = shipInformation.shipName;
+            obj.initialPoints = shipInformation.initialPoints;
+            obj.pointDimension = shipInformation.pointDimension;
+            obj.R_switch = shipInformation.R_switch;
+            obj.minDistanceBetweenPoints = obj.R_switch*2+1; 
+            
             obj.D = length(obj.initialPoints);
+            obj.encoding = ones(obj.D,1);
+
             [lower, upper, PopDec] =  generateInitialPopulation(obj, populationType);
             obj.lower = lower;
             obj.upper = upper;
@@ -83,8 +70,10 @@ classdef Remus100WaypointsSearch < PROBLEM
                 z = pointsMatrix(:,3)';
 
                 PopCon(individualIndex) = round(obj.minDistanceBetweenPoints/2) > min(sqrt( diff(pointsMatrix(:,1)).^2 + diff(pointsMatrix(:,2)).^2 + diff(pointsMatrix(:,3)).^2));
-                PopCon(individualIndex) = PopCon(individualIndex) || any(z < zeros(1,numPoints));
 
+                if obj.pointDimension == 3
+                    PopCon(individualIndex) = PopCon(individualIndex) || any(z < zeros(1,numPoints));
+                end
                    
             end
 

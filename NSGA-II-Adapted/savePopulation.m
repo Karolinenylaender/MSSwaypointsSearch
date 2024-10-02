@@ -1,5 +1,6 @@
-function obj = savePopulation(obj, Population)
-    global shipResultsPath
+function obj = savePopulation(obj, Population, parameter)
+    %global shipResultsPath
+    shipResultsPath = parameter.shipResultsPath;
     
     generationPath = append(shipResultsPath, "-g", string(obj.generation));
     paths = obj.pathsMap;

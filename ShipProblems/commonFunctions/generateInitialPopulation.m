@@ -1,11 +1,13 @@
 function [lower, upper, PopDec] =  generateInitialPopulation(obj, populationType)
 
-    [fullpath, subPaths, transitionIndices] = performSimulation(obj.initialPoints, obj);
+    [fullpath, subPaths, transitionIndices, angles] = performSimulation(obj.initialPoints, obj);
     paths = containers.Map();
     paths("fullpath") = fullpath;
     %paths("subPaths") = subPaths;
     paths("transitionIndices") = transitionIndices;
+    paths("angles") = angles;
     obj.pathsMap('0') = paths;
+
 
     obj.initialPath = fullpath; 
     %obj.intialSegementDistance =calculateSegmentLengths(transitionIndices, fullpath);

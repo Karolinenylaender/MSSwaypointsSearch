@@ -21,37 +21,64 @@ for experimentNumber = startExperiment:maxExperiments
 
     experimentPerformance = loadProsessedResults(ship, searchProcess, experimentNumber, populationSize, numGenerations);
     %missingPathsIndexes = find(all(experimentPerformance == -1,2))
-    %straightPaths = experimentPerformance(~all(experimentPrformance==-1, 2), :);
+    experimentPerformance = experimentPerformance(~all(experimentPerformance==-1, 2), :);
 
     %normalizedExperiements = normalizeRows(straightPaths)
+    
+    % features_norm    = normalizeRows(experimentPerformance, "minMax"); % outliers? 3 0.7 0.5 0.3 1.14 0.13
+    % features_std     = normalizeRows(experimentPerformance, "zscore"); %% feil
+    % features_scale   = normalizeRows(experimentPerformance, "decimalScaling");
+    % features_unit    = normalizeRows(experimentPerformance, "unitVector");
+    % features_robust  = normalizeRows(experimentPerformance, "robustScaling");
+    % features_squash  = normalizeRows(experimentPerformance, "squashing");
+    % features_normal  = normalizeRows(experimentPerformance, "normal");
 
-    features_norm    = normalizeRows(experimentPerformance, "minMax"); % outliers? 3 0.7 0.5 0.3 1.14 0.13
-    features_std     = normalizeRows(experimentPerformance, "zscore"); %% feil
-    features_scale   = normalizeRows(experimentPerformance, "decimalScaling");
-    features_unit    = normalizeRows(experimentPerformance, "unitVector");
-    features_robust  = normalizeRows(experimentPerformance, "robustScaling");
-    features_squash  = normalizeRows(experimentPerformance, "squashing");
-    features_normal  = normalizeRows(experimentPerformance, "normal");
+    normalizationMethods = ["minMax", "zscore", "decimalScaling", "unitVector", "robustScaling", "squashing", "normal"];
+    normMethod1 = normalizationMethods(1);
+    normalize1 = normalizeRows(experimentPerformance,normMethod1);
+    normMethod2 = normalizationMethods(6);
+    normalize2 = normalizeRows(experimentPerformance,normMethod2);
 
-    normalized1 = features_squash;
-    normalized2 = features_scale;
     for i =2:size(experimentPerformance,2)
         figure(i)
         subplot(3,1,1)
-        idx = dbscan([experimentPerformance(:,1) experimentPerformance(:,i)],1,10)
+     
+        idx = dbscan([experimentPerformance(:,1) experimentPerformance(:,i)],1,10);
         gscatter(experimentPerformance(:,1), experimentPerformance(:,i), idx)
+        title(["feature 1: ", featureNames(1), "vs feature 2",  featureNames(i),])
+
         
         subplot(3,1,2)
-        idxNorm1 = dbscan([normalized1(:,1) normalized1(:,i)],0.01,5)
-        gscatter(normalized1(:,1), normalized1(:,i),idxNorm1)
+        idxNorm1 = dbscan([normalize1(:,1) normalize1(:,i)],0.01,5);
+        gscatter(normalize1(:,1), normalize1(:,i),idxNorm1)
+        xlabel(['normalization method', normMethod1])
 
         subplot(3,1,3)
-        idxNorm2 = dbscan([normalized2(:,1) normalized2(:,i)],0.01,5)
-        gscatter(normalized2(:,1), normalized2(:,i),idxNorm2)
+        idxNorm2 = dbscan([normalize2(:,1) normalize2(:,i)],0.01,5);
+        gscatter(normalize2(:,1), normalize2(:,i),idxNorm2)
+        xlabel(['normalization method', normMethod2])
 
 
 
     end
+    % feature1 = 2
+    % feature2 = 6
+    % 
+    % figure(1)
+    % idx = dbscan(experimentPerformance,1,10);
+    % plot3(experimentPerformance(:,1), experimentPerformance(:,2), experimentPerformance(:,6),'o',idx)
+    % title(["clustering all "])
+    % 
+    % subplot(3,1,2)
+    % idxNorm1 = dbscan([normalize1],0.01,5);
+    % scatter3(normalize1(:,1), normalize1(:,2),normalize1(:,6),idxNorm1)
+    % xlabel(['normalization method', normMethod1])
+    % 
+    % subplot(3,1,3)
+    % idxNorm2 = dbscan([normalize2],0.01,5);
+    % gscatter(normalize2(:,1), normalize2(:,6), normalize2(:,6),idxNorm2)
+    % xlabel(['normalization method', normMethod2])
+
       
     % min-max normalization - range of [0 1]
     % Z score normalization mean 0 and standard deviation of 1

@@ -18,16 +18,16 @@ classdef NSGAIIAdapted < ALGORITHM
     methods
         function main(Algorithm,Problem)
             %% Generate random population
-            Population = Problem.Initialization(Problem.N);
+            Population = Problem.Initialization(Problem.N, Algorithm.parameter);
             [~,FrontNo,CrowdDis] = EnvironmentalSelection(Population,Problem.N);
-            Problem = savePopulation(Problem, Population);
+            Problem = savePopulation(Problem, Population, Algorithm.parameter);
 
             %% Optimization
             while Algorithm.NotTerminated(Population)
                 MatingPool = TournamentSelection(2,Problem.N,FrontNo,-CrowdDis);
                 %OffspringGA  = OperatorGA(Problem,Population(MatingPool));
                 Offspring = GArealPoints(Problem,Population(MatingPool));
-                Problem = savePopulation(Problem, Offspring);
+                Problem = savePopulation(Problem, Population, Algorithm.parameter);
                 [Population,FrontNo,CrowdDis] = EnvironmentalSelection([Population,Offspring],Problem.N);
             end
         end

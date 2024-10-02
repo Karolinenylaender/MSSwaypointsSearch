@@ -2,7 +2,7 @@
 close all
 clear all
 
-ship = "npsauv";
+%ship = "npsauv";
 %ship = "mariner"
 ship = "remus100";
 
@@ -10,10 +10,12 @@ ship = "remus100";
 searchProcess = "minDistanceMaxPath";
 
 
-startExperiment = 4;
-maxExperiments = 4 %startExperiment+30;
+startExperiment = 2;
+maxExperiments = 2 %startExperiment+30;
 populationSize = 10; 
 numGenerations = 1000;
+featureNames = ["Length of path", "mean curvature", "max curvature", "std curvature", ...
+                "max angle xy", "std angle xy", "max angle xz", "std angle xz", "max angle yz", "max angle yz"];
 
 shipPerformance = [];
 for experimentNumber = startExperiment:maxExperiments
@@ -25,45 +27,60 @@ for experimentNumber = startExperiment:maxExperiments
 
     %normalizedExperiements = normalizeRows(straightPaths)
     
-    numSubpaths = size(experimentPerformance,1)/(populationSize*numGenerations);
+    numSubpaths = round(size(experimentPerformance,1)/(populationSize*numGenerations));
     populationFeaturesMatrix = [];
-    for populationIndex = 1:numSubpaths:size(experimentPerformance,1)
+    for populationIndex = 1:numSubpaths:(size(experimentPerformance,1)-numSubpaths+1)
         populationFeatures = experimentPerformance(populationIndex:(populationIndex+numSubpaths-1),:);
         populationFeatures = populationFeatures(any(populationFeatures ~= -1, 2), :);
         populationFeatures = [sum(populationFeatures(1:4),1) mean(populationFeatures(:,5:end),1)] ;
         populationFeaturesMatrix = [populationFeaturesMatrix; populationFeatures];
     end
 
-    generationFeaturesMatrix = [];
-    for generationIndex = 1:(populationSize*numSubpaths):size(populationFeaturesMatrix)
-        generationFeatures = experimentPerformance(generationIndex:(generationIndex+(populationSize*numSubpaths)-1),:);
-        generationFeatures = generationFeatures(any(generationFeatures ~= -1, 2), :);
-        generationFeatures = [sum(generationFeatures(1:4),1) mean(generationFeatures(:,5:end),1)] ;
-        generationFeaturesMatrix = [generationFeaturesMatrix; generationFeatures];
-    end
-
-    experimentFeaturesMatrix = [];
     experimentFeaturesMatrix = experimentPerformance(any(experimentPerformance ~= -1, 2), :);
     experimentFeaturesMatrix = [sum(experimentFeaturesMatrix(1:4),1) mean(experimentFeaturesMatrix(:,5:end),1)];
 
+    normalizationMethods = ["minMax", "zscore", "decimalScaling", "unitVector", "robustScaling", "squashing", "normal"]
+    normMethod = normalizationMethods(3);
 
-    features_norm    = normalizeRows(experimentPerformance, "minMax"); % outliers? 3 0.7 0.5 0.3 1.14 0.13
-    features_std     = normalizeRows(experimentPerformance, "zscore");
-    features_scale   = normalizeRows(experimentPerformance, "decimalScaling");
-    features_unit    = normalizeRows(experimentPerformance, "unitVector");
-    features_robust  = normalizeRows(experimentPerformance, "robustScaling");
-    features_squash  = normalizeRows(experimentPerformance, "squashing");
-    features_normal  = normalizeRows(experimentPerformance, "normal");
+    methodIndex1 = 4; % 2, 3 or 4 
+    methodIndex2 = 8; %5, 6, 7, 8, 9 or 10 
 
+
+    A = normalizeRows(totalObjectives(:,2), normMethod);
+    Bmatrix =  normalizeRows([populationFeaturesMatrix(:,methodIndex1) populationFeaturesMatrix(:,methodIndex2)], normMethod)
+    %features_norm    = normalizeRows(populationFeaturesMatrix, "minMax"); % outliers? 3 0.7 0.5 0.3 1.14 0.13
+    %features_std     = normalizeRows(populationFeaturesMatrix, "zscore");
+    %features_scale   = normalizeRows(populationFeaturesMatrix, "decimalScaling");
+    %features_unit    = normalizeRows(populationFeaturesMatrix, "unitVector");
+    %features_robust  = normalizeRows(populationFeaturesMatrix, "robustScaling");
+    %features_squash  = normalizeRows(populationFeaturesMatrix, "squashing");
+    %features_normal  = normalizeRows(populationFeaturesMatrix, "normal");
+    
+    %normalizationOfChoice = features_squash;
    
-    A = totalObjectives 
-    %B1 =
-    %B2 = 
+    %A = totalObjectives(:,2); 
+    %B1 = ones(length(A),1) - Bmatrix(:,1) % can index  2, 3 or 4 
+    B1 =  Bmatrix(:,1) % can index  2, 3 or 4 
+    %B2 = ones(length(A),1) - Bmatrix(:,2) % can be index 5, 6, 7, 8, 9 or 10 
+    B2 = Bmatrix(:,2) % can be index 5, 6, 7, 8, 9 or 10 
 
     robustness1 = A + B1/2;
     robustness2 = A + B2/2;
 
+    figure(experimentNumber)
+    subplot(3,1,1)
+    boxplot([robustness1 robustness2])
+    title(['Boxplot - normalization method', normMethod])
+    subplot(3,1,2)
+    histogram(robustness1)
+    xlabel(["metric 1:", featureNames(methodIndex1)])
+    title('Histogram')
+    subplot(3,1,3)
+    
+    histogram(robustness2)
+    xlabel(["metric 2:", featureNames(methodIndex2)])
 
+    
 end
 
 
