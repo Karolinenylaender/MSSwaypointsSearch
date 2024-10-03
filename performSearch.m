@@ -6,7 +6,7 @@ function [Dec,Obj,Con] = performSearch(ship, searchProcess, resultsPath, experim
         algorithm = @RandomSearchPopulation;
         %populationSize = populationSize*numGenerations;
         %numGenerations = 1;
-        parameter.populationType = "randomSearch";
+        parameter.populationType = "random";
     end
 
     MaxEvaluation = populationSize*numGenerations;
