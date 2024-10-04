@@ -37,16 +37,18 @@ function [angles, fullpath] = extractAnglesAndPath(simdata,ALOSdata, ship)
         z_mutated = eta(:,3);
         fullpath = [x_mutated y_mutated z_mutated];
 
-        uc = Vc .* cos(betaVc);
-        vc = Vc .* sin(betaVc);
-        alpha_c = atan( (nu(:,2).*sin(eta(:,4))+nu(:,3).*cos(eta(:,4))) ./ nu(:,1) );
-        Uv = nu(:,1) .* sqrt( 1 + tan(alpha_c).^2 );
-        beta_c = atan( ( nu(:,2).*cos(eta(:,4))-nu(:,3).*sin(eta(:,4)) ) ./ ...
-            ( Uv .* cos(eta(:,5)-alpha_c) ) );
-        alpha = atan2( (nu(:,3)-wc), (nu(:,1)-uc) );
-        beta  = atan2( (nu(:,2)-vc), (nu(:,1)-uc) );
+        angles = [eta(:,4) eta(:,5) eta(:,6) nu Vc betaVc wc];
 
-        angles = [alpha, alpha_c, alpha_c_hat, beta, beta_c, beta_c_hat];
+        % uc = Vc .* cos(betaVc);
+        % vc = Vc .* sin(betaVc);
+        % alpha_c = atan( (nu(:,2).*sin(eta(:,4))+nu(:,3).*cos(eta(:,4))) ./ nu(:,1) );
+        % Uv = nu(:,1) .* sqrt( 1 + tan(alpha_c).^2 );
+        % beta_c = atan( ( nu(:,2).*cos(eta(:,4))-nu(:,3).*sin(eta(:,4)) ) ./ ...
+        %     ( Uv .* cos(eta(:,5)-alpha_c) ) );
+        % alpha = atan2( (nu(:,3)-wc), (nu(:,1)-uc) );
+        % beta  = atan2( (nu(:,2)-vc), (nu(:,1)-uc) );
+
+        % angles = [alpha, alpha_c, alpha_c_hat, beta, beta_c, beta_c_hat];
     elseif ship == "nspauv"
         alpha_c_hat = ALOSdata(:,3);
         beta_c_hat = ALOSdata(:,4);

@@ -27,10 +27,11 @@ function [experimentPerformance, totalObjectives] = CalculateFeaturesExperiment(
             individualPath = paths(string(individualIndex));
             fullPath = individualPath('fullpath');
             transitionIndices = individualPath('transitionIndices');
+            angles = individualPath('angles');
 
             pointsMatrix  =  reshape(individual, [3, 6])';
 
-            pathPerformance = evaluatePath(fullPath, transitionIndices);
+            pathPerformance = evaluatePath(fullPath, transitionIndices, angles);
             if transitionIndices(1) == length(fullPath)
                 plotShipPath(fullPath,pointsMatrix,5)
                 numMissingPaths = length(pointsMatrix);
@@ -47,57 +48,57 @@ function [experimentPerformance, totalObjectives] = CalculateFeaturesExperiment(
             else
                 pathPerformance = pathPerformance; 
                 
-                if any(pathPerformance(:,1)>13) && (any(pathPerformance(:,2) > 0.01) || any(pathPerformance(2:end,3) > 0.1) || any(pathPerformance(2:end,4) > 0.02)) 
-                    % max and std curvature
-                    pathPerformance
-                    pathPerformance(:,1:4)
-                    plotShipPath(fullPath,pointsMatrix,5)
-                    pathPerformance;
-                end
-
-                if any(pathPerformance(:,1)>10)
-                    % length of path
-                    pathPerformance
-                    pathPerformance(:,1)
-                    plotShipPath(fullPath,pointsMatrix,5)
-                    pathPerformance;
-                end
-                if any(pathPerformance(:,2) > 0.01) || any(pathPerformance(2:end,3) > 0.1) || any(pathPerformance(2:end,4) > 0.02) 
-                    % max and std curvature
-                    pathPerformance
-                    pathPerformance(:,2:4)
-                    plotShipPath(fullPath,pointsMatrix,5)
-                    pathPerformance;
-                end
-
-                if any(pathPerformance(:,5) > pi/2) ||  any(pathPerformance(:,6) > 0.01)  
-                    pathPerformance
-                    pathPerformance(:,5:6)
-                    plotShipPath(fullPath,pointsMatrix,5)
-                    pathPerformance;
-                    % angle xy max
-
-                    % angle xy std 
-
-                end   
-                if any(pathPerformance(:,7) > pi/2) || any(pathPerformance(:,8) > 0.01) 
-                    pathPerformance
-                    pathPerformance(:,7:8)
-                    plotShipPath(fullPath,pointsMatrix,5)
-                    pathPerformance;
-                    % angle xz std 
-                     % angle xz max
-                end
-                if any(pathPerformance(:,9) > pi/2) || any(pathPerformance(:,10) > 0.01)  
-                    pathPerformance
-                    pathPerformance(:,9:10)
-                    plotShipPath(fullPath,pointsMatrix,5)
-                    pathPerformance;
-                    % angle yz max
-
-                    % angle yz std     
-
-                end
+                % if any(pathPerformance(:,1)>13) && (any(pathPerformance(:,2) > 0.01) || any(pathPerformance(2:end,3) > 0.1) || any(pathPerformance(2:end,4) > 0.02)) 
+                %     % max and std curvature
+                %     pathPerformance
+                %     pathPerformance(:,1:4)
+                %     plotShipPath(fullPath,pointsMatrix,5)
+                %     pathPerformance;
+                % end
+                % 
+                % if any(pathPerformance(:,1)>10)
+                %     % length of path
+                %     pathPerformance
+                %     pathPerformance(:,1)
+                %     plotShipPath(fullPath,pointsMatrix,5)
+                %     pathPerformance;
+                % end
+                % if any(pathPerformance(:,2) > 0.01) || any(pathPerformance(2:end,3) > 0.1) || any(pathPerformance(2:end,4) > 0.02) 
+                %     % max and std curvature
+                %     pathPerformance
+                %     pathPerformance(:,2:4)
+                %     plotShipPath(fullPath,pointsMatrix,5)
+                %     pathPerformance;
+                % end
+                % 
+                % if any(pathPerformance(:,5) > pi/2) ||  any(pathPerformance(:,6) > 0.01)  
+                %     pathPerformance
+                %     pathPerformance(:,5:6)
+                %     plotShipPath(fullPath,pointsMatrix,5)
+                %     pathPerformance;
+                %     % angle xy max
+                % 
+                %     % angle xy std 
+                % 
+                % end   
+                % if any(pathPerformance(:,7) > pi/2) || any(pathPerformance(:,8) > 0.01) 
+                %     pathPerformance
+                %     pathPerformance(:,7:8)
+                %     plotShipPath(fullPath,pointsMatrix,5)
+                %     pathPerformance;
+                %     % angle xz std 
+                %      % angle xz max
+                % end
+                % if any(pathPerformance(:,9) > pi/2) || any(pathPerformance(:,10) > 0.01)  
+                %     pathPerformance
+                %     pathPerformance(:,9:10)
+                %     plotShipPath(fullPath,pointsMatrix,5)
+                %     pathPerformance;
+                %     % angle yz max
+                % 
+                %     % angle yz std     
+                % 
+                % end
 
             end
             generationPerformance = [generationPerformance; pathPerformance];
