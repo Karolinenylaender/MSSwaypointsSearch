@@ -2,7 +2,7 @@ function plotShipPath(fullPath, pointsMatrix, R_switch)
     if nargin < 2
         R_switch = 5;
     end
-    close all;
+    %close all;
     if size(fullPath,2) == 2
         xpath = fullPath(:,1);
         ypath = fullPath(:,2);

@@ -8,7 +8,7 @@ function [experimentPerformance, totalObjectives] = loadProsessedResults(ship, s
     if exist(resultsPath) == 2
         load(resultsPath, "experimentPerformance", "totalObjectives")
     else
-        [experimentPerformance, totalObjectives] = CalculateFeaturesExperiment(ship, searchProcess, experimentNumber, populationSize, numGenerations)
+        [experimentPerformance, totalObjectives] = CalculateSearchPerformancePerSubpath(ship, searchProcess, experimentNumber, populationSize, numGenerations);
     end
 
 

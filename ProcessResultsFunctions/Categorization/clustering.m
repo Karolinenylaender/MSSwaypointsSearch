@@ -10,12 +10,14 @@ ship = "remus100";
 %searchProcess = "randomSearch";
 searchProcess = "minDistanceMaxPath";
 
-startExperiment = 2;
-maxExperiments = 2 %startExperiment+30;
+startExperiment = 27;
+maxExperiments = 27 %startExperiment+30;
 populationSize = 10; 
 numGenerations = 1000;
-featureNames = ["Length of path", "mean curvature", "max curvature", "std curvature", ...
-                "max angle xy", "std angle xy", "max angle xz", "std angle xz", "max angle yz", "max angle yz"];
+%featureNames = ["Length of path", "mean curvature", "max curvature", "std curvature", ...
+%                "max angle xy", "std angle xy", "max angle xz", "std angle xz", "max angle yz", "max angle yz"];
+
+featureNames = ["Length of path", "num peaks psi", "num peaks theta", "num peaks phi"];
 
 for experimentNumber = startExperiment:maxExperiments
 
@@ -38,29 +40,56 @@ for experimentNumber = startExperiment:maxExperiments
     normalize1 = normalizeRows(experimentPerformance,normMethod1);
     normMethod2 = normalizationMethods(6);
     normalize2 = normalizeRows(experimentPerformance,normMethod2);
+    feature1 = experimentPerformance(:,1)
+    feature2 = sum(experimentPerformance(:,2:end),2)
 
-    for i =2:size(experimentPerformance,2)
-        figure(i)
-        subplot(3,1,1)
+    normMethod1 = normalizationMethods(1);
+    normalize1 = normalizeRows(experimentPerformance,normMethod1);
+    normMethod2 = normalizationMethods(6);
+    normalize2 = normalizeRows(experimentPerformance,normMethod2);
+
+
+    %for i =2:size(experimentPerformance,2)
+    figure(1)
+    subplot(3,1,1)
      
-        idx = dbscan([experimentPerformance(:,1) experimentPerformance(:,i)],1,10);
-        gscatter(experimentPerformance(:,1), experimentPerformance(:,i), idx)
-        title(["feature 1: ", featureNames(1), "vs feature 2",  featureNames(i),])
+    idx = dbscan([experimentPerformance(:,1) feature2],10,100);
+    gscatter(feature1, feature2, idx)
+    xlabel("Length of path");
+    ylabel("sum of peaks");
+    title(["dbscan clustering"])
+
+    subplot(3,1,2)
+    idx = dbscan(experimentPerformance,10,100);
+    gscatter(feature1, feature2, idx)
+    xlabel("Length of path");
+    ylabel("sum of peaks");
+    title(["dbscan clustering - not summing"])
+
+    
+
+    subplot(3,1,3)
+    idx = kmeans(experimentPerformance,10);
+    %idx = dbscan([experimentPerformance(:,1) feature2],5,10);
+    gscatter(feature1, feature2, idx)
+    xlabel("Length of path");
+    ylabel("sum of peaks");
+    title(["kmeas clustering"])
 
         
-        subplot(3,1,2)
-        idxNorm1 = dbscan([normalize1(:,1) normalize1(:,i)],0.01,5);
-        gscatter(normalize1(:,1), normalize1(:,i),idxNorm1)
-        xlabel(['normalization method', normMethod1])
+    % subplot(3,1,2)
+    % idxNorm1 = dbscan([normalize1(:,1) normalize1(:,i)],0.01,5);
+    % gscatter(normalize1(:,1), normalize1(:,i),idxNorm1)
+    % xlabel(['normalization method', normMethod1])
+    % 
+    % subplot(3,1,3)
+    % idxNorm2 = dbscan([normalize2(:,1) normalize2(:,i)],0.01,5);
+    % gscatter(normalize2(:,1), normalize2(:,i),idxNorm2)
+    % xlabel(['normalization method', normMethod2])
 
-        subplot(3,1,3)
-        idxNorm2 = dbscan([normalize2(:,1) normalize2(:,i)],0.01,5);
-        gscatter(normalize2(:,1), normalize2(:,i),idxNorm2)
-        xlabel(['normalization method', normMethod2])
 
 
-
-    end
+    %end
     % feature1 = 2
     % feature2 = 6
     % 

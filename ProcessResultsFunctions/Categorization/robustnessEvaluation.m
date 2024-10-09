@@ -10,15 +10,24 @@ ship = "remus100";
 searchProcess = "minDistanceMaxPath";
 
 
-startExperiment = 2;
-maxExperiments = 2 %startExperiment+30;
+startExperiment = 27;
+maxExperiments = startExperiment % %startExperiment+30;
 populationSize = 10; 
+
+validExperiments = [27,28, 29, 10, 11 ]
 numGenerations = 1000;
 featureNames = ["Length of path", "mean curvature", "max curvature", "std curvature", ...
                 "max angle xy", "std angle xy", "max angle xz", "std angle xz", "max angle yz", "max angle yz"];
 
+for experimentNumber = validExperiments %startExperiment:maxExperiments
+
+    [experimentPerformance, totalObjectives]  = loadProsessedResults(ship, searchProcess, experimentNumber, populationSize, numGenerations);
+end
+
 shipPerformance = [];
-for experimentNumber = startExperiment:maxExperiments
+
+%for experimentNumber = startExperiment:maxExperiments
+for experimentNumber = validExperiments %startExperiment:maxExperiments
 
     [experimentPerformance, totalObjectives]  = loadProsessedResults(ship, searchProcess, experimentNumber, populationSize, numGenerations);
     %missingPathsIndexes = find(all(experi
@@ -39,7 +48,7 @@ for experimentNumber = startExperiment:maxExperiments
     experimentFeaturesMatrix = experimentPerformance(any(experimentPerformance ~= -1, 2), :);
     experimentFeaturesMatrix = [sum(experimentFeaturesMatrix(1:4),1) mean(experimentFeaturesMatrix(:,5:end),1)];
 
-    normalizationMethods = ["minMax", "zscore", "decimalScaling", "unitVector", "robustScaling", "squashing", "normal"]
+    normalizationMethods = ["minMax", "zscore", "decimalScaling", "unitVector", "robustScaling", "squashing", "normal"];
     normMethod = normalizationMethods(3);
 
     methodIndex1 = 4; % 2, 3 or 4 
@@ -47,7 +56,7 @@ for experimentNumber = startExperiment:maxExperiments
 
 
     A = normalizeRows(totalObjectives(:,2), normMethod);
-    Bmatrix =  normalizeRows([populationFeaturesMatrix(:,methodIndex1) populationFeaturesMatrix(:,methodIndex2)], normMethod)
+    Bmatrix =  normalizeRows([populationFeaturesMatrix(:,methodIndex1) populationFeaturesMatrix(:,methodIndex2)], normMethod);
     %features_norm    = normalizeRows(populationFeaturesMatrix, "minMax"); % outliers? 3 0.7 0.5 0.3 1.14 0.13
     %features_std     = normalizeRows(populationFeaturesMatrix, "zscore");
     %features_scale   = normalizeRows(populationFeaturesMatrix, "decimalScaling");
