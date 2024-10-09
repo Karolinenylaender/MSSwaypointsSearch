@@ -13,14 +13,37 @@ ship = "remus100";
 searchProcess = "minDistanceMaxPath";
 
 
-startExperiment = 400;
-maxExperiments = 427;
-populationSize = 100; 
-numGenerations = 10;
+startExperiment = 1;
+maxExperiments = 15 %startExperiment+30;
+populationSize = 10; 
+numGenerations = 1000;
+
+
+normalShipHV = shipHyperVolume(ship, "minDistanceMaxPath", startExperiment, maxExperiments, populationSize, numGenerations)
+randomShipHV = shipHyperVolume(ship,  "randomSearch", startExperiment, maxExperiments, populationSize, numGenerations);
+
+
+
+function HV = shipHyperVolume(ship, searchProcess, startExperiment, maxExperiments, populationSize, numGenerations)
+    referencePoint = [1 1];
+    shipObjectives = []
+    for experimentNumber = startExperiment:maxExperiments
+        totalObjectives = [];
+        for generation = 1:numGenerations
+            [Population, ~] = loadResults(ship, searchProcess, experimentNumber, populationSize, generation);
+            Obj = Population.objs; 
+            totalObjectives = [totalObjectives; Obj];
+        end
+        shipObjectives = [shipObjectives totalObjectives];
+    end
+    normalizedObjectives = [normalize(shipObjectives(:,1),'range') normalize(shipObjectives(:,2),'range')];
+    HV = hypervolume(normalizedObjectives,referencePoint,N);
+
+end
 
 basepath =  "/Users/karolinen/Documents/Projects/Projects/Ships/Simulators/experiments/multiobjectiveSearch/results/";
 
-N = 1000;
+  
 referencePoint = [1 1];
 
 objectivesAllExperiments = [];
