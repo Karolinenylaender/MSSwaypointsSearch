@@ -1,4 +1,4 @@
-function combinedPopulations = loadAllShip(ship, searchProcess, validExperiments, populationSize, numGenerations)
+function combinedPopulations = loadAllShipPopulations(ship, searchProcess, validExperiments, populationSize, numGenerations)
     
     folderName = append("ExtractedPopulations/");
     resultsPathInfo = what("ProcessedResults");
@@ -13,7 +13,7 @@ function combinedPopulations = loadAllShip(ship, searchProcess, validExperiments
         objsList = [];
         consList = [];
         for experimentNumber = validExperiments
-            experimentPopulation = loadExperimentsPopulation(ship, searchProcess, experimentNumber,populationSize, numGenerations);
+            experimentPopulation = loadExperimentsPopulations(ship, searchProcess, experimentNumber,populationSize, numGenerations);
             decsList = [decsList; experimentPopulation.decs];
             objsList = [objsList; experimentPopulation.objs];
             consList = [consList; experimentPopulation.cons];

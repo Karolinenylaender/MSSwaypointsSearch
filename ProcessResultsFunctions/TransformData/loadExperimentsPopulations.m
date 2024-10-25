@@ -1,4 +1,4 @@
-function experimentPopulation = loadExperimentsPopulation(ship, searchProcess, experimentNumber, populationSize, numGenerations)
+function experimentPopulation = loadExperimentsPopulations(ship, searchProcess, experimentNumber, populationSize, numGenerations)
     if searchProcess == "minDistanceMaxPath"
         experimentFolderName = append("ex", string(experimentNumber),"/");
     elseif searchProcess == "randomSearch"
