@@ -1,86 +1,87 @@
-%% perform statistical tests
+%% run experiment statistical test
 close all
 clear all
 
-%ship = "npsauv";
-%ship = "mariner"
 ship = "remus100";
-
-shipList = [ "remus100"] %, "nspauv", "mariner"];
-searchProcesses = ["minDistanceMaxPath","randomSearch"];
-
-
-%searchProcess = "randomSearch";
+%ship = "nspauv";
+populationSize = 10; 
+numGenerations = 1000;
 searchProcess = "minDistanceMaxPath";
 
 
-startExperiment = 1;
-maxExperiments = 15 %startExperiment+30;
-populationSize = 10; 
-numGenerations = 1000;
-
-figure
-for shipIndex = 1:length(shipList)
-    ship = shipList(shipIndex);
-    normalShipHV = shipHyperVolume(ship, "minDistanceMaxPath", 2, 8, populationSize, numGenerations);
-    %normalShipHV = shipHyperVolume(ship, "minDistanceMaxPath", startExperiment, maxExperiments, populationSize, numGenerations)
-
-    randomShipHV = shipHyperVolume(ship,  "randomSearch", 20, 21, populationSize, numGenerations);
-    %randomShipHV = shipHyperVolume(ship,  "randomSearch", startExperiment, maxExperiments, populationSize, numGenerations);
-
-    a12 = A12test(normalShipHV,randomShipHV)
-
-    subplot(length(shipList),1,shipIndex)
-    boxplot([normalShipHV, randomShipHV])
-    title(["Ship: ", ship])
-    xticks(1:2)
-    xticklabels(["normal search", "random search"])
-    
-
-
+if ship == "nspauv"
+    SearchValidExperiments = 1:4; 
+    RandomValidExperiments = [1 2 3 4]; % 5 6 25 26 27 28 29 30];
+else
+    SearchValidExperiments = 1:30; 
+    RandomValidExperiments = 1:30;
 end
 
+PopulationNSGASearch = loadAllShipPopulations(ship, "minDistanceMaxPath",SearchValidExperiments, populationSize, numGenerations);
+PopulationRandomSearch = loadAllShipPopulations(ship, "randomSearch",RandomValidExperiments, populationSize, numGenerations);
+NSGAObjectives = PopulationNSGASearch.objs;
+randomObjectives = PopulationRandomSearch.objs;
+combinedObjectives = [NSGAObjectives; randomObjectives];
+maxObjectives = [max(combinedObjectives(:,1)), max(combinedObjectives(:,2))];
+minObjectives = [min(combinedObjectives(:,1)), min(combinedObjectives(:,2))];
 
 
+NSGANormalizedHVScores = calculateSearchHvNormalized(ship, "minDistanceMaxPath",SearchValidExperiments, populationSize, numGenerations,maxObjectives, minObjectives);
+NSGAHVScores =  calculateSearchHV(ship, "minDistanceMaxPath",SearchValidExperiments, populationSize, numGenerations,maxObjectives, minObjectives);
+
+RandomNormalizedHVScores = calculateSearchHvNormalized(ship, "randomSearch",RandomValidExperiments, populationSize, numGenerations,maxObjectives, minObjectives);
+RandomHVScores =  calculateSearchHV(ship, "randomSearch",RandomValidExperiments, populationSize, numGenerations,maxObjectives, minObjectives);
 
 
-function shipHV = shipHyperVolume(ship, searchProcess, startExperiment, maxExperiments, populationSize, numGenerations)
+figure(1)
+boxplot([NSGANormalizedHVScores(:,1), RandomNormalizedHVScores(:,1)])
+xticklabels({"NSGA search", "Random search"})
+title("Hypervolume: Pableo function -  normalized")
+
+
+figure(2)
+boxplot([NSGANormalizedHVScores(:,2), RandomNormalizedHVScores(:,2)])
+xticklabels({"NSGA search", "Random search"})
+title("Hypervolume: PlatEMO function - normalized")
+
+figure(3)
+boxplot([NSGAHVScores(:,1), RandomHVScores(:,1)])
+xticklabels({"NSGA search", "Random search"})
+title("Hypervolume: PlatEMO function - not normalized")
+
+figure(4)
+boxplot([NSGAHVScores(:,2), RandomHVScores(:,2)])
+xticklabels({"NSGA search", "Random search"})
+title("Hypervolume: PlatEMO function - not normalized")
+
+   
+
+
+function HVscores = calculateSearchHV(ship, searchProcess,validExperiments, populationSize, numGenerations,maxValues, minValues)
+    HVscores = []
+    referencePoint = maxValues;
+    for experimentNumber = validExperiments
+        experimentPopulation = loadExperimentsPopulations(ship, searchProcess,experimentNumber, populationSize, numGenerations);
+
+        scores = [hypervolume(experimentPopulation.best.objs, referencePoint, length(experimentPopulation.best.objs)) HV(experimentPopulation,referencePoint);
+        HVscores = [HVscores; scores];
+    end
+end
+
+function HVscores = calculateSearchHvNormalized(ship, searchProcess,validExperiments, populationSize, numGenerations,maxValues, minValues)
+    HVscores = []
     referencePoint = [1 1];
-    shipHV = []
-    for experimentNumber = startExperiment:maxExperiments
-        totalObjectives = [];
-        for generation = 1:numGenerations
-            [Population, ~] = loadResults(ship, searchProcess, experimentNumber, populationSize, generation);
-            Obj = Population.objs; 
-            totalObjectives = [totalObjectives; Obj];
-        end
-        normalizedObjectives = [normalize(totalObjectives(:,1),'range') normalize(totalObjectives(:,2),'range')];
-        HV = hypervolume(normalizedObjectives,referencePoint,1000);
-        shipHV = [shipHV HV];
-    end
-    %normalizedObjectives = [normalize(shipObjectives(:,1),'range') normalize(shipObjectives(:,2),'range')];
-    %HV = hypervolume(normalizedObjectives,referencePoint,1000);
+    for experimentNumber = validExperiments
+        experimentPopulation = loadExperimentsPopulations(ship, searchProcess,experimentNumber, populationSize, numGenerations);
+        experimentObjectives = experimentPopulation.objs;
 
+        normalizedObjecitves = (experimentObjectives - minValues.*ones(length(experimentObjectives),length(minValues))) ./ (maxValues-minValues);
+        experimentPopulation = SOLUTION(experimentPopulation.decs, normalizedObjecitves, experimentPopulation.cons);
+        scores = [hypervolume(experimentPopulation.best.objs, referencePoint, length(experimentPopulation.best.objs)) HV(experimentPopulation,referencePoint)]
+
+        HVscores = [HVscores; scores];
+    end
 end
 
 
 
-function a12 = A12test(x,y)
-    nx = length(x);
-    ny = length(y);
-
-    ties = 0;
-    wins = 0;
-
-    for i = 1:nx
-        for j = 1:ny
-            if x(i) < y(j)
-                wins = wins + 1;
-            elseif x(i) == y(j)
-                ties = ties + 1;
-            end
-        end
-    end
-
-    a12 = (wins +0.5*ties) / (nx*ny);
-end
