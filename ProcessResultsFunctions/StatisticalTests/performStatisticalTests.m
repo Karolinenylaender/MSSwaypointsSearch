@@ -36,7 +36,7 @@ RandomHVScores =  calculateSearchHV(ship, "randomSearch",RandomValidExperiments,
 figure(1)
 boxplot([NSGANormalizedHVScores(:,1), RandomNormalizedHVScores(:,1)])
 xticklabels({"NSGA search", "Random search"})
-title("Hypervolume: Pableo function -  normalized")
+title("Hypervolume: Pablo function -  normalized")
 
 
 figure(2)
@@ -47,7 +47,7 @@ title("Hypervolume: PlatEMO function - normalized")
 figure(3)
 boxplot([NSGAHVScores(:,1), RandomHVScores(:,1)])
 xticklabels({"NSGA search", "Random search"})
-title("Hypervolume: PlatEMO function - not normalized")
+title("Hypervolume: Pablo function - not normalized")
 
 figure(4)
 boxplot([NSGAHVScores(:,2), RandomHVScores(:,2)])
@@ -58,18 +58,18 @@ title("Hypervolume: PlatEMO function - not normalized")
 
 
 function HVscores = calculateSearchHV(ship, searchProcess,validExperiments, populationSize, numGenerations,maxValues, minValues)
-    HVscores = []
+    HVscores = [];
     referencePoint = maxValues;
     for experimentNumber = validExperiments
         experimentPopulation = loadExperimentsPopulations(ship, searchProcess,experimentNumber, populationSize, numGenerations);
 
-        scores = [hypervolume(experimentPopulation.best.objs, referencePoint, length(experimentPopulation.best.objs)) HV(experimentPopulation,referencePoint);
+        scores = [hypervolume(experimentPopulation.best.objs, referencePoint, length(experimentPopulation.best.objs)) HV(experimentPopulation,referencePoint)];
         HVscores = [HVscores; scores];
     end
 end
 
 function HVscores = calculateSearchHvNormalized(ship, searchProcess,validExperiments, populationSize, numGenerations,maxValues, minValues)
-    HVscores = []
+    HVscores = [];
     referencePoint = [1 1];
     for experimentNumber = validExperiments
         experimentPopulation = loadExperimentsPopulations(ship, searchProcess,experimentNumber, populationSize, numGenerations);
@@ -77,7 +77,7 @@ function HVscores = calculateSearchHvNormalized(ship, searchProcess,validExperim
 
         normalizedObjecitves = (experimentObjectives - minValues.*ones(length(experimentObjectives),length(minValues))) ./ (maxValues-minValues);
         experimentPopulation = SOLUTION(experimentPopulation.decs, normalizedObjecitves, experimentPopulation.cons);
-        scores = [hypervolume(experimentPopulation.best.objs, referencePoint, length(experimentPopulation.best.objs)) HV(experimentPopulation,referencePoint)]
+        scores = [hypervolume(experimentPopulation.best.objs, referencePoint, length(experimentPopulation.best.objs)) HV(experimentPopulation,referencePoint)];
 
         HVscores = [HVscores; scores];
     end
