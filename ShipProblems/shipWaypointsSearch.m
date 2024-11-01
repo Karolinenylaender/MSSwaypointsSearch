@@ -65,13 +65,14 @@ classdef shipWaypointsSearch < PROBLEM
                 individual = PopDec(individualIndex,:);
 
                 numPoints = length(individual)/obj.pointDimension;
-
                 pointsMatrix  =  reshape(individual, [obj.pointDimension, numPoints])';
-                z = pointsMatrix(:,3)';
+       
+                if obj.pointDimension == 2
+                    PopCon(individualIndex) = round(obj.minDistanceBetweenPoints/2) > min(sqrt( diff(pointsMatrix(:,1)).^2 + diff(pointsMatrix(:,2)).^2));
+                elseif obj.pointDimension == 3
+                    PopCon(individualIndex) = round(obj.minDistanceBetweenPoints/2) > min(sqrt( diff(pointsMatrix(:,1)).^2 + diff(pointsMatrix(:,2)).^2 + diff(pointsMatrix(:,3)).^2));
 
-                PopCon(individualIndex) = round(obj.minDistanceBetweenPoints/2) > min(sqrt( diff(pointsMatrix(:,1)).^2 + diff(pointsMatrix(:,2)).^2 + diff(pointsMatrix(:,3)).^2));
-
-                if obj.pointDimension == 3
+                    z = pointsMatrix(:,3)';
                     PopCon(individualIndex) = PopCon(individualIndex) || any(z < zeros(1,numPoints));
                 end
                    
@@ -87,11 +88,27 @@ classdef shipWaypointsSearch < PROBLEM
                 numPoints = length(individual)/obj.pointDimension;
 
                 pointsMatrix  =  reshape(individual, [obj.pointDimension, numPoints])';
+                
+                conditions = pointsToClose(pointsMatrix, obj.minDistanceBetweenPoints/2) == true ||  all(any(pointsMatrix(1:end-1,:) == pointsMatrix(2:end,:),2));
+                if obj.pointDimension == 2
+                    conditions = conditions || any(all(pointsMatrix== [0 0],2));
 
+                elseif obj.pointDimension == 3
+                    conditions =  conditions || any(all(pointsMatrix== [0 0 0],2)) || all(pointsMatrix(:,3) < zeros(numPoints,1));
+                end
 
-                while (pointsToClose(pointsMatrix, obj.minDistanceBetweenPoints/2) == true ||  all(any(pointsMatrix(1:end-1,:) == pointsMatrix(2:end,:),2)) || any(all(pointsMatrix== [0 0 0],2)) || all(pointsMatrix(:,3) < zeros(numPoints,1))) % && (obj.validPath(individualIndex) ~= 1))
+                while (conditions) % && (obj.validPath(individualIndex) ~= 1))
+                    
                     individual = obj.lower + (obj.upper - obj.lower).*rand(1,obj.D);
                     pointsMatrix  =  reshape(individual, [obj.pointDimension, numPoints])';
+
+                    conditions = pointsToClose(pointsMatrix, obj.minDistanceBetweenPoints/2) == true ||  all(any(pointsMatrix(1:end-1,:) == pointsMatrix(2:end,:),2));
+                    if obj.pointDimension == 2
+                        conditions = conditions || any(all(pointsMatrix== [0 0],2));
+    
+                    elseif obj.pointDimension == 3
+                        conditions =  conditions || any(all(pointsMatrix== [0 0 0],2)) || all(pointsMatrix(:,3) < zeros(numPoints,1));
+                    end
 
                 end
                 PopDec(individualIndex,:) = individual;

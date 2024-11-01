@@ -5,7 +5,7 @@ function [fullpath, subPaths, transitionIndices, angles] = performSimulation(lis
          wpt.pos.x  = [0; pointsMatrix(:,1)];
          wpt.pos.y  = [0; pointsMatrix(:,2)];
     
-         [simdata, ~] = marinerPath(wpt, obj.Delta_h, obj.R_switch);
+         [simdata, ~] = marinerPath(wpt, obj.R_switch);
          [angles, fullpath] = extractAnglesAndPath(simdata,[], obj.shipName);
          % x = simdata(:,5);
          % y = simdata(:,6);

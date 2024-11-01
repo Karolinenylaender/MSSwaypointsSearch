@@ -1,11 +1,12 @@
-function [simdata, state] = marinerPath(wpt, Delta_h, R_switch)
+function [simdata, state] = marinerPath(wpt, R_switch)
         clear LOSchi EKF_5states
         if nargin ==1, R_switch = 400; end
         wayPoints = [wpt.pos.x wpt.pos.y];
         
+        
     
         % LOS parameters
-        %Delta_h = 500;                   % Look-ahead distance
+        Delta_h = 500;                   % Look-ahead distance
         %R_switch = 400;                  % Radius of switching circle
         K_f = 0.2;                       % LOS observer gain
     
