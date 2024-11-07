@@ -92,7 +92,7 @@ function [simdata, state] = marinerPath(wpt, R_switch)
                 U_hat, chi_hat, omega_chi_hat]; 
             
             
-            state(i,:) = [x' xdot'];
+            %state(i,:) = [x' xdot'];
             % Numerical integration
             x = x + h * xdot;                             % Euler's method
             e_int = e_int + h * e;

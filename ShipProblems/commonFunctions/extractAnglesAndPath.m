@@ -1,7 +1,7 @@
 function [angles, fullpath] = extractAnglesAndPath(simdata,ALOSdata, ship)
     if ship == "mariner"
-        x = simdata(:,4);
-        y = simdata(:,5);
+        x = simdata(:,5);
+        y = simdata(:,6);
         fullpath = [x y];
 
         u     = simdata(:,1); 
@@ -10,7 +10,7 @@ function [angles, fullpath] = extractAnglesAndPath(simdata,ALOSdata, ship)
         % psi   = rad2deg(simdata(:,6));
         % delta = -rad2deg(simdata(:,7));     % delta = -delta_r (physical angle)
         r     = simdata(:,3);  
-        psi   = simdata(:,6);
+        psi   = simdata(:,4);
         delta = simdata(:,7);     
         
         %delta_c = rad2deg(simdata(:,12));
