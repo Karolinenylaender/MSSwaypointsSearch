@@ -26,7 +26,7 @@ QIs = ["Generational Distance (GD) Search ", "Generational Distance (GD) combine
        "Euclidean Distance (ED)","Epsilon (EP) search", ...
        "Epsilon (EP) ship"  " Pareto front size (PFS)", ...
        "Coverage (C) Search",  "Coverage (C) Combined", ...
-       "Hypervolume approximation", "Hypervolume"]
+       "Hypervolume approximation", "Hypervolume platEMO"]
 
 for i = 1:length(QIs)
 
@@ -37,11 +37,9 @@ for i = 1:length(QIs)
 end
 
 
-%% KAppa etc
-
-PopulationNSGASearch = loadAllShipPopulations(ship, "minDistanceMaxPath",1:30, populationSize, numGenerations);
-PopulationRandomSearch = loadAllShipPopulations(ship, "randomSearch",1:30, populationSize, numGenerations);
-epsionScore = epsilon_metric(PopulationNSGASearch.best.objs, PopulationRandomSearch.best.objs)
+% PopulationNSGASearch = loadAllShipPopulations(ship, "minDistanceMaxPath",1:30, populationSize, numGenerations);
+% PopulationRandomSearch = loadAllShipPopulations(ship, "randomSearch",1:30, populationSize, numGenerations);
+% epsionScore = epsilon_metric(PopulationNSGASearch.best.objs, PopulationRandomSearch.best.objs)
 
 
 votesForNSGAI = zeros(length(QIs),1);
@@ -62,8 +60,12 @@ for i = 1:length(QIs)
     
 end
 votesForNSGAI
-
 QIs(~votesForNSGAI)
+
+
+%% Difference Tests (DT)
+% the Mann-Whitney U test to determine the significance of differences in the results
+% the Vargha and Delaney A12 statistics as the effect size measure to determine the strength of the significance,
 
 
 a12values = zeros(length(QIs),1);
@@ -92,7 +94,3 @@ end
 a12values
 mannWhitneyUtestValues
 finalVote
-
-%% Difference Tests (DT)
-% the Mann-Whitney U test to determine the significance of differences in the results
-% the Vargha and Delaney A12 statistics as the effect size measure to determine the strength of the significance,

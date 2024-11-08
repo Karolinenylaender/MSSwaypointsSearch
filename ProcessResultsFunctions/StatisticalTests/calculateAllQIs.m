@@ -2,8 +2,8 @@ close all
 clear all
 
 ship = "marienr";
-ship = "remus100";
-%ship = "nspauv";
+%ship = "remus100";
+ship = "nspauv";
 populationSize = 10; 
 numGenerations = 1000;
 
@@ -35,7 +35,7 @@ NSGAscores = calucateStatisticalScores(ship, "minDistanceMaxPath",SearchValidExp
 RandomScores = calucateStatisticalScores(ship, "randomSearch",RandomValidExperiments, populationSize, numGenerations,maxObjectives, minObjectives, PopulationRandomSearch, combinedSearches)
 
 QIs = ["Generational Distance (GD)", "Euclidean Distance (ED)", "Epsilon (EP)", "Generalized Spead (GS)", " PAreto front size (PFS)", "Inverted Generational Distance (IGD)", "Coverage (C)", "Hypervolume approximation", "Hypervolume"]
-QIs = ["Generational Distance (GD) Search ", "Generational Distance (GD) combined", "Inverted Generational Distance (IGD) Search", "Inverted Generational Distance (IGD) cobined", "Euclidean Distance (ED)","Epsilon (EP) search", "Epsilon (EP) ship"  " Pareto front size (PFS)",  "Coverage (C) Search",  "Coverage (C) Combined", "Hypervolume approximation", "Hypervolume"]
+QIs = ["Generational Distance (GD) ", "Inverted Generational Distance (IGD)", "Euclidean Distance (ED)", "Epsilon (EP)"  " Pareto front size (PFS)",  "Coverage (C)", "Hypervolume approximation", "Hypervolume Platemo"]
 
 for i = 1:length(QIs)
 
@@ -77,12 +77,10 @@ function scoresMatrix = calucateStatisticalScores(ship, searchProcess,validExper
         experimentParetoFront = experimentPopulation.best.objs;
 
         % Generational Distance
-        GDscoreSearch = GD(experimentPopulation,searchParetoFront);
-        GDscoreCombined = GD(experimentPopulation,shipParetoFront);
+        GDscore = GD(experimentPopulation,shipParetoFront);
 
         % IGD
-        IGDscoreSearch = IGD(experimentPopulation,searchParetoFront);
-        IGDscoreCombined = IGD(experimentPopulation,shipParetoFront);
+        IGDscore = IGD(experimentPopulation,shipParetoFront);
 
         % Euclidean Distance
         sIdeal = [min(experimentParetoFront(:,1)) min(experimentParetoFront(:,2))];
@@ -90,15 +88,13 @@ function scoresMatrix = calucateStatisticalScores(ship, searchProcess,validExper
         EDscore = min(pdist2(sIdeal, experimentParetoFront));
 
         % Epsilon
-        epsionScoreSearch = epsilon_metric(experimentParetoFront,searchParetoFront);
-        epsionScoreShip = epsilon_metric(experimentParetoFront,shipParetoFront);
+        epsionScore = epsilon_metric(experimentParetoFront,shipParetoFront);
 
         % Pareto front size 
         PFSscore = length(experimentParetoFront);
 
         % Coverage
-        CoverageScoreSearch = sum(all(ismember(experimentParetoFront,searchParetoFront),2)) / length(searchParetoFront);
-        CoverageScoreShip = sum(all(ismember(experimentParetoFront,shipParetoFront),2)) / length(shipParetoFront);
+        CoverageScore = sum(all(ismember(experimentParetoFront,shipParetoFront),2)) / length(shipParetoFront);
 
         % Hypervolume
         experimentObjectives = experimentPopulation.objs;
@@ -108,7 +104,7 @@ function scoresMatrix = calucateStatisticalScores(ship, searchProcess,validExper
         n = 10000;
         HVscores = [hypervolume(experimentPopulation.best.objs, referencePoint, n) HV(experimentPopulation,referencePoint)];
 
-        scores = [GDscoreSearch GDscoreCombined IGDscoreSearch IGDscoreCombined EDscore epsionScoreSearch epsionScoreShip PFSscore  CoverageScoreSearch CoverageScoreShip HVscores];
+        scores = [GDscore IGDscore EDscore epsionScore PFSscore CoverageScore HVscores];
         scoresMatrix = [scoresMatrix; scores];
 
     end

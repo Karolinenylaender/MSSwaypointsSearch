@@ -54,8 +54,13 @@ function [lower, upper, PopDec] =  generateInitialPopulation(obj, populationType
     if populationType == "random"
         PopDec = randomizePopulation(obj, lower, upper);
     else
-        mutatedPopulation = seedPopulation((obj.N)-1,obj.D, obj.minDistanceBetweenPoints, obj.lower, obj.upper, obj.pointDimension, obj.initialPoints);
-        PopDec = [obj.initialPoints; mutatedPopulation];
+        %mutatedPopulation = seedPopulation((obj.N)-1,obj.D, obj.minDistanceBetweenPoints, obj.lower, obj.upper, obj.pointDimension, obj.initialPoints);
+        %PopDec = [obj.initialPoints; mutatedPopulation];
+
+        randomPopulation = randomizePopulation(obj, lower, upper);
+        randomPopulation = randomPopulation(1:size(randomPopulation,1)/2,:)
+        mutatedPopulation = seedPopulation((obj.N)/2-1,obj.D, obj.minDistanceBetweenPoints, obj.lower, obj.upper, obj.pointDimension, obj.initialPoints);
+        PopDec = [obj.initialPoints; mutatedPopulation; randomPopulation];
     end
   
     
