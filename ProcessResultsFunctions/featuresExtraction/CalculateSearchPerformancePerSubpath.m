@@ -36,7 +36,7 @@ function [subPathPerformance, experimentPerformance] = CalculateSearchPerformanc
                 individualPerformance = -ones(numMissingPaths, numMetrics);
                 maxNumberOfPeaks = peaksPerformance;
                 averageNumberOfPeaks = peaksPerformance;
-                sumNumberOfPeaks = sumNumberOfPeaks;
+                sumNumberOfPeaks = peaksPerformance;
             elseif length(transitionIndices) < numInitialWaypoints
                 numMissingPaths = numInitialWaypoints - length(transitionIndices);
                 missingPathPerformance = -ones(numMissingPaths, numMetrics);

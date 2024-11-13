@@ -6,20 +6,24 @@ ship = "remus100";
 ship = "nspauv";
 populationSize = 10; 
 numGenerations = 1000;
-searchProcess = "minDistanceMaxPath";
-
 
 if ship == "nspauv"
     SearchValidExperiments = 1:30; 
     RandomValidExperiments = 1:30;
-
-else
+    HalfPopValidExperiments = 1:3; % 4:30
+elseif ship == "remus100"
     SearchValidExperiments = 1:30; 
     RandomValidExperiments = 1:30;
+    HalfPopValidExperiments = 1:11; % 12:30
+elseif ship == "mariner"
+    SearchValidExperiments = 1:13; %14:30 
+    RandomValidExperiments = 1:30;
+    HalfPopValidExperiments = 0; %1:30
 end
 
 PopulationNSGASearch = loadAllShipPopulations(ship, "minDistanceMaxPath",SearchValidExperiments, populationSize, numGenerations);
 PopulationRandomSearch = loadAllShipPopulations(ship, "randomSearch",RandomValidExperiments, populationSize, numGenerations);
+PopulationHalfPopSearch = loadAllShipPopulations(ship, "HalfHalfMutation",HalfPopValidExperiments, populationSize, numGenerations);
 NSGAObjectives = PopulationNSGASearch.objs;
 randomObjectives = PopulationRandomSearch.objs;
 combinedObjectives = [NSGAObjectives; randomObjectives];
@@ -97,7 +101,7 @@ hold on
 plot(randomObjectives(:,1), randomObjectives(:,2),'ro')
 legend("NSGA search", "random search")
 ylabel(" [Minmimize] objective 2 distance between points")
-xlabel(" [Maximize of the negative] objecitve 1 sum of path lenths")
+xlabel(" [Maximize of the negative] objecitve 1 sum of path lengths")
    
 
 
