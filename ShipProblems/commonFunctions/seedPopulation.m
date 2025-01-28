@@ -6,7 +6,6 @@ function [popDec] = seedPopulation(populationSize,numberOfDecisionVariables, min
     for individNumber = 1:populationSize
         individValid = false;
         while individValid == false 
-%             tempIndivid = lowerlimit + (upperLimit - lowerlimit).*rand(1,numberOfDecisionVariables);
             tempIndivid = mutate(initialPoints);
             if pointDimension == 2
                  x = tempIndivid(1:numPoints);

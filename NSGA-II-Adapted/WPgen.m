@@ -1,4 +1,4 @@
-classdef NSGAIIAdapted < ALGORITHM
+classdef WPgen < ALGORITHM
 % <multi> <real/integer/label/binary/permutation> <constrained/none>
 % Nondominated sorting genetic algorithm II
 

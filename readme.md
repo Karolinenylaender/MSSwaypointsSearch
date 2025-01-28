@@ -56,7 +56,7 @@ The name of each file indicates the type of search that is performed
 
 Loading this file you can find: 
 * 'Population': the Population for the current generation
-* 'Path': a map that cointains the 'fullpath' and 'transitionIndices' for each individual in the population. 
+* 'Path': a map that cointains the 'fullpath', 'angles' and 'transitionIndices' for each individual in the population. 
 
 
 *Evaluate experiments*
@@ -71,7 +71,8 @@ Located inside folder ProcessResultsFolder:
 
 # Folder structure
 ## ShipProblems/
-* userproblem for each ship: npsauvWaypointsSearch, Remus100WaypointsSearch and MarinerWaypointSearch
+* shipWaypointsSearch: userproblem for a ship
+* loadShipSearchParameters: loads the parameters for the ship
 * commonFunctions/
 * * calculateSegmentLengths.m
 * * evalauteWaypointsAndPath.m
@@ -80,7 +81,7 @@ Located inside folder ProcessResultsFolder:
 * * pointsToClose.m
 * * splitDataBetweenWaypoints.m
 * * pathGeneration/ 
-* * *paths for each ship
+* * paths for each ship
 
 ## NSGA-II-Adapted/
 * EnvironmentalSelection.m 

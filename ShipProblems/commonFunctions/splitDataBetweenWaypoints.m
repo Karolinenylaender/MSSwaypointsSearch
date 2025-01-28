@@ -41,7 +41,6 @@ function [transitionIndices, pathSegments] = splitDataBetweenWaypoints(pointsMat
                 transitionIndices(end) = size(path,1);
             end
         end
-        %pathSegments{end+1} = path(current_start_idx:size(path, 1),:);
     end
    
 end

@@ -51,12 +51,11 @@ classdef shipWaypointsSearch < PROBLEM
                 paths("fullpath") = fullpath;
                 paths("transitionIndices") = transitionIndices;
                 paths("angles") = angles;
-                obj.pathsMap(string(individualIndex)) =paths;
+                obj.pathsMap(string(individualIndex)) = paths;
                 
                 [totalDistanceBetweenWaypoints, subPathLength] = evalauteWaypointsAndPath(obj.initialPoints, obj.initialPath, individual, fullpath, subPaths, transitionIndices);
                 PopObj(individualIndex,:) = [-subPathLength totalDistanceBetweenWaypoints];
             end 
-            %obj.generationPerformances = [obj.generationPerformances; calculateGenerationOverallPerformance(PopObj)];
         end
 
         function PopCon = CalCon(obj, PopDec)
@@ -97,7 +96,7 @@ classdef shipWaypointsSearch < PROBLEM
                     conditions =  conditions || any(all(pointsMatrix== [0 0 0],2)) || all(pointsMatrix(:,3) < zeros(numPoints,1));
                 end
 
-                while (conditions) % && (obj.validPath(individualIndex) ~= 1))
+                while (conditions)
                     
                     individual = obj.lower + (obj.upper - obj.lower).*rand(1,obj.D);
                     pointsMatrix  =  reshape(individual, [obj.pointDimension, numPoints])';

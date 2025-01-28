@@ -1,3 +1,20 @@
 *.DS_Store
 *.asv
+*.sh
+*.gitignore
+experiments/results-old
+experiments/evaluationFunctions/oldFunctions
+MSS-experiements/
+MSSwaypointsSearch/
+ProsessResults/multiobjectiveSearch
+ProcessResultsFunctions/evaluationFunctions/oldFunctions
+ExperimentFunctions/results-old
+ExperimentsResults/mariner
+ExperimentsResults/remus100
+ExperimentsResults/nspauv
+
+
+
+BIMK-PlatEMO-4.7.0.0/
+MSS/
 

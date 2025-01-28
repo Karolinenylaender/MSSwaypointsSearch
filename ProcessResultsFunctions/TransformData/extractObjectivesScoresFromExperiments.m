@@ -2,27 +2,45 @@
 close all
 clear all
 
-%ship = "nspauv";
-ship = "mariner"
-%ship = "remus100";
-
-searchProcess = "randomSearch";
-searchProcess = "minDistanceMaxPath";
-
-
-%startExperiment = 15;
-%maxExperiments =  startExperiment+30;
+numGenerations = 1000; 
 populationSize = 10; 
 
-if searchProcess == "minDistanceMaxPath"
-    validExperiments =  9:10 %9:30 % 1:30%
-else searchProcess == "randomSearch"
-    %validExperiments = [1 2 3 4 5 7 8 9 10 11 12 13 ];    14:30
-    validExperiments =  16:18 %14:30% 21:24 %21:24;
 
+ship = "mariner"
+%ship = "nspauv";
+%ship = "remus100";
+
+%searchProcess = "randomSearch";
+%searchProcess = "minDistanceMaxPath";
+%searchProcess = "HalfHalfMutation"
+searchProcess = "randInitPop"
+
+if ship == "mariner"
+    randomSearchValidExperiments = 1:30;
+    seedNSGAValidExperiments = 1:30;
+    mixedNSGAValidExperiments = 1:30; 
+    randomNSGAValidExperiments = 28; %1:30 
+elseif ship == "nspauv"
+    randomSearchValidExperiments = 1:30;
+    seedNSGAValidExperiments = 1:30;
+    mixedNSGAValidExperiments = 1:30;
+    randomNSGAValidExperiments = 1:30;
+elseif ship == "remus100"
+    randomSearchValidExperiments = 1:30;
+    seedNSGAValidExperiments = 1:30;
+    mixedNSGAValidExperiments = 1:30;
+    randomNSGAValidExperiments = 1:30; 
 end
 
-numGenerations = 1000; 
+if searchProcess == "randomSearch"
+    validExperiments = randomSearchValidExperiments;
+elseif searchProcess == "minDistanceMaxPath"
+    validExperiments = seedNSGAValidExperiments;
+elseif searchProcess =="HalfHalfMutation"
+    validExperiments = mixedNSGAValidExperiments;
+elseif searchProcess == "randInitPop"
+    validExperiments = randomNSGAValidExperiments;
+end
 
 
 for experimentNumber = validExperiments
@@ -36,7 +54,13 @@ function extractObjectivesScores(ship, searchProcess, experimentNumber, populati
         experimentFolderName = append("ex", string(experimentNumber),"/");
     elseif searchProcess == "randomSearch"
         experimentFolderName = append("rand-ex", string(experimentNumber),"/"); 
+    elseif searchProcess == "HalfHalfMutation"
+        experimentFolderName = append("half-ex", string(experimentNumber),"/"); 
+    elseif searchProcess == "randInitPop"
+        experimentFolderName = append("randInit-ex", string(experimentNumber),"/"); 
+    
     end
+
     folderName = append("ExtractedPopulations/",experimentFolderName) 
     resultsPathInfo = what("ProcessedResults");
     resultsFolder = char(resultsPathInfo.path);

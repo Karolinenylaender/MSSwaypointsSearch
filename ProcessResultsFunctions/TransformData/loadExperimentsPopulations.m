@@ -1,8 +1,13 @@
 function experimentPopulation = loadExperimentsPopulations(ship, searchProcess, experimentNumber, populationSize, numGenerations)
-    if searchProcess == "minDistanceMaxPath"
-        experimentFolderName = append("ex", string(experimentNumber),"/");
-    elseif searchProcess == "randomSearch"
-        experimentFolderName = append("rand-ex", string(experimentNumber),"/"); 
+    if searchProcess == "WPgenSeed"
+        experimentFolderName = append("WPgenSeed-ex", string(experimentNumber),"/");
+    elseif searchProcess == "RndSearch"
+        experimentFolderName = append("RndSearch-ex", string(experimentNumber),"/"); 
+    elseif searchProcess == "WPgenComb" 
+        experimentFolderName = append("WPgenComb-ex", string(experimentNumber),"/");
+    elseif searchProcess == "WPgenRnd"
+        experimentFolderName = append("WPgenRnd-ex", string(experimentNumber),"/"); 
+    
     end
     folderName = append("ExtractedPopulations/",experimentFolderName); 
     

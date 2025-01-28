@@ -8,6 +8,10 @@ addFolderToPath("NSGA-II-Adapted/")
 addFolderToPath("ProcessResultsFunctions/")
 addFolderToPath("ExperimentsResults")
 
+addpath("runExperiment.m")
+addpath("performSearch.m")
+
+
 savepath;
 fprintf('MATLAB path updated and saved successfully in MATLAB.\n');
 

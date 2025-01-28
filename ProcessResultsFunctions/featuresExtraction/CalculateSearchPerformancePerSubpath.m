@@ -2,14 +2,16 @@ function [subPathPerformance, experimentPerformance] = CalculateSearchPerformanc
     experimentPerformance = [];
     subPathPerformance = [];
 
-    numMetrics = 4;
-
+   
     if ship == "remus100"
         numInitialWaypoints = 6;
+        numMetrics = 6;
     elseif ship == "nspauv"
         numInitialWaypoints = 6;
+        numMetrics = 4;
     elseif ship == "mariner"
-        numInitialWaypoints = 7;
+        numInitialWaypoints = 6; % 7
+        numMetrics = 4;
     end
 
     for generation = 1:numGenerations
@@ -23,21 +25,21 @@ function [subPathPerformance, experimentPerformance] = CalculateSearchPerformanc
             fullPath = individualPath('fullpath');
             transitionIndices = individualPath('transitionIndices');
             angles = individualPath('angles');
-            if size(angles,2) > numMetrics - 1
-                angles = angles(:,1:3);
-            end
+            %if size(angles,2) > numMetrics - 1
+            %    angles = angles(:,1:3);
+            %end
             
             individualPerformance = extractFeaturesPath(fullPath, angles, transitionIndices);
 
             peaksPerformance = [individualPerformance(:,2:end) sum(individualPerformance(:,2:end),2)];
 
-            if transitionIndices(1) == length(fullPath)
+            if transitionIndices(1) == length(fullPath) %% missing all
                 numMissingPaths = numInitialWaypoints;
                 individualPerformance = -ones(numMissingPaths, numMetrics);
                 maxNumberOfPeaks = peaksPerformance;
                 averageNumberOfPeaks = peaksPerformance;
                 sumNumberOfPeaks = peaksPerformance;
-            elseif length(transitionIndices) < numInitialWaypoints
+            elseif length(transitionIndices) < numInitialWaypoints -1 
                 numMissingPaths = numInitialWaypoints - length(transitionIndices);
                 missingPathPerformance = -ones(numMissingPaths, numMetrics);
                 individualPerformance = [individualPerformance; missingPathPerformance];

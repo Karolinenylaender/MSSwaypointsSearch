@@ -29,8 +29,8 @@ function plotShipPath(fullPath, pointsMatrix, R_switch)
         subplot(3,1,1)
         plot(ypath,xpath)
         hold on
-         plot(ypoints, xpoints, 'rx', 'MarkerSize', 15);
-         hold off
+        plot(ypoints, xpoints, 'rx', 'MarkerSize', 15);
+        hold off
         xlabel("y axis")
         ylabel("x axis")
         grid on

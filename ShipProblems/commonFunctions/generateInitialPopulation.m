@@ -1,17 +1,15 @@
 function [lower, upper, PopDec] =  generateInitialPopulation(obj, populationType)
 
-    if populationType ~= "random"
+    if populationType ~= "Random"
 
         [fullpath, subPaths, transitionIndices, angles] = performSimulation(obj.initialPoints, obj);
         paths = containers.Map();
         paths("fullpath") = fullpath;
-        %paths("subPaths") = subPaths;
         paths("transitionIndices") = transitionIndices;
         paths("angles") = angles;
         obj.pathsMap('0') = paths;
         obj.initialPath = fullpath; 
     end
-    %obj.intialSegementDistance =calculateSegmentLengths(transitionIndices, fullpath);
     
     numPoints = length(obj.initialPoints)/obj.pointDimension;
     pointsMatrix  =  reshape(obj.initialPoints, [obj.pointDimension, numPoints])';
@@ -51,16 +49,26 @@ function [lower, upper, PopDec] =  generateInitialPopulation(obj, populationType
     lower = lower(:)';
     upper = upper(:)';
 
-    if populationType == "random"
+    if populationType == "Random"
+        % Fully random 
         PopDec = randomizePopulation(obj, lower, upper);
-    else
-        %mutatedPopulation = seedPopulation((obj.N)-1,obj.D, obj.minDistanceBetweenPoints, obj.lower, obj.upper, obj.pointDimension, obj.initialPoints);
-        %PopDec = [obj.initialPoints; mutatedPopulation];
-
+    elseif populationType == "Seed"
+        % Fully seeded
+        mutatedPopulation = seedPopulation((obj.N)-1,obj.D, obj.minDistanceBetweenPoints, obj.lower, obj.upper, obj.pointDimension, obj.initialPoints);
+        PopDec = [obj.initialPoints; mutatedPopulation];
+        
+    elseif populationType == "Comb"
+        % Combination
         randomPopulation = randomizePopulation(obj, lower, upper);
-        randomPopulation = randomPopulation(1:size(randomPopulation,1)/2,:)
+        randomPopulation = randomPopulation(1:size(randomPopulation,1)/2,:);
         mutatedPopulation = seedPopulation((obj.N)/2-1,obj.D, obj.minDistanceBetweenPoints, obj.lower, obj.upper, obj.pointDimension, obj.initialPoints);
         PopDec = [obj.initialPoints; mutatedPopulation; randomPopulation];
+
+    elseif populationType == "Rnd"
+        % Random with initial WP
+        randomPopulation = randomizePopulation(obj, lower, upper);
+        randomPopulation = randomPopulation(1:size(randomPopulation,1)-1,:);
+        PopDec = [obj.initialPoints; randomPopulation];
     end
   
     
