@@ -31,8 +31,8 @@ setupProject.m
 ## Step 3:  Run the experiments
 1. Go to the file 'runExperiments.m'
 2. In the file you can choose
-* Ship type: "mariner", "nspauv" and "remus100"
-* Algorithm type: "randomSearch" or "NSGA-ii"
+* Vessel type: "mariner", "nspauv" and "remus100"
+* Algorithm type: "rndSearcoh", "WPgenSeed", "WPgenComb" or "WPgenRnd" 
 * Number of experiments (default is 30)
 * Path to save the data (defaullt is the folder ExperimentsResults/)
 * Population size (default is 10)
@@ -45,11 +45,11 @@ To run one experiment you can call the function
 
 ## Step 4: Evaluate the generated waypoints and paths 
 *Structure of experiments*
-Inside the folder 'ExperiementsResults' there is a folder for each ship. 
+Inside the folder 'ExperiementsResults' there is a folder for each vessel. 
 The name of each file indicates the type of search that is performed
-> e.g ExperiementsResults/remus100/minDistanceMaxPath-P10-exNum51-g2 is the results for
-> * ship = remus100
-> * search method: minDistanceMaxPath
+> e.g ExperiementsResults/remus100/WPgenComb-P10-exNum51-g2 is the results for
+> * Vessel = remus100
+> * search method: WPgenComb
 > * population size: 10
 > * experiment number 51
 > * generation number: 2 
@@ -57,6 +57,32 @@ The name of each file indicates the type of search that is performed
 Loading this file you can find: 
 * 'Population': the Population for the current generation
 * 'Path': a map that cointains the 'fullpath', 'angles' and 'transitionIndices' for each individual in the population. 
+* * The 'fullpath' is the path of the vessel
+* * The 'angles' is the angles of the vessel
+* * the 'transitionIndices' is the at which sampling step the vessels reaches a waypoint and redirects its trajectory to the following waypoint. 
+
+
+# Folder structure
+## ShipProblems/
+* shipWaypointsSearch.m userproblem for a vessel
+* loadShipSearchParameters.m loads the parameters for the vessel
+* commonFunctions/ (help functions)
+* * calculateSegmentLengths.m
+* * evalauteWaypointsAndPath.m
+* * generateInitialPopulation.m
+* * performSimulation.m
+* * pointsToClose.m
+* * splitDataBetweenWaypoints.m
+* * pathGeneration/ 
+* * * paths for each vessel
+
+
+## NSGA-II-Adapted/
+* EnvironmentalSelection.m 
+* GArealPoints.m performs crossover and mutation 
+* WPgen.m
+* RandomSearchPopulation.m
+* savePopulation.m
 
 
 *Evaluate experiments*
@@ -69,24 +95,5 @@ Located inside folder ProcessResultsFolder:
 * evaluationFunction
 * robustNess
 
-# Folder structure
-## ShipProblems/
-* shipWaypointsSearch: userproblem for a ship
-* loadShipSearchParameters: loads the parameters for the ship
-* commonFunctions/
-* * calculateSegmentLengths.m
-* * evalauteWaypointsAndPath.m
-* * generateInitialPopulation.m
-* * performSimulation.m
-* * pointsToClose.m
-* * splitDataBetweenWaypoints.m
-* * pathGeneration/ 
-* * paths for each ship
 
-## NSGA-II-Adapted/
-* EnvironmentalSelection.m 
-* GArealPoints.m performs crossover where the points (x,y) or (x,y,z) are moved together
-* NSGAIIAdapted.m
-* RandomSearchPopulation.m
-* savePopulation.m
 
