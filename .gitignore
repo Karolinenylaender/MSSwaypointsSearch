@@ -2,12 +2,16 @@
 *.asv
 *.sh
 .gitignore
+*.py
+
 experiments/results-old
 experiments/evaluationFunctions/oldFunctions
 MSS-experiements/
 MSSwaypointsSearch/
+
 ProsessResults/multiobjectiveSearch
-ProcessResultsFunctions/evaluationFunctions/oldFunctions
+ProcessResultsFunctions/evaluationFunctions/
+ProcessResultsFunctions/Plots/
 ExperimentFunctions/results-old
 ExperimentsResults/mariner
 ExperimentsResults/remus100

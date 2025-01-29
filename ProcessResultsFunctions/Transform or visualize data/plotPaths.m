@@ -102,62 +102,62 @@ R_switch = 5;
 % plot(missingPath(:,3))
 
 %subplot(2,2,1)
-figure(1)
-plot3(straightPath(:,2), straightPath(:,1), straightPath(:,3), 'LineWidth',2.0, 'color','b');
-hold on
-plot3( straightWpt(:,2), straightWpt(:,1), straightWpt(:,3), 'ro', 'MarkerSize', R_switch*2);
-grid on;
-set(gca, 'ZDir', 'reverse');
-xlabel("East") % y axis
-ylabel("North") % x axis
-zlabel("Downward from sea level") % z axis
-%title("Example of stable path")
-ax = gca; % Get current axes
-ax.FontSize = 16;
-
-%subplot(2,2,2)
-figure(2)
-plot3(curlyPath(:,2), curlyPath(:,1), curlyPath(:,3), 'LineWidth',2.0, 'color','b');
-hold on
-plot3( curlyWpt(:,2), curlyWpt(:,1), curlyWpt(:,3), 'ro', 'MarkerSize', R_switch*2.5);
-grid on;
-set(gca, 'ZDir', 'reverse');
-xlabel("East") % y axis
-ylabel("North") % x axis
-zlabel("Downward from sea level") % z axis
-hold on
-%title("Example of unstable path")
-ax = gca; % Get current axes
-ax.FontSize = 16;
-
-%subplot(2,2,3)
-%figure(3)
-%plot3(semiCurlyPath(:,2), semiCurlyPath(:,1), semiCurlyPath(:,3), 'LineWidth',2.0, 'color','b');
-%hold on
-%plot3( semiCurlyWpt(:,2), semiCurlyWpt(:,1), semiCurlyWpt(:,3), 'ro', 'MarkerSize', R_switch*2.5);
-%grid on;
-%set(gca, 'ZDir', 'reverse');
-%xlabel("East") % y axis
-%ylabel("North") % x axis
-%zlabel("Downward from sea level") % z axis
-%hold on
-%title("Example of semi-unstable path")
-%ax = gca; % Get current axes
-%ax.FontSize = 16;
-
-%subplot(2,2,4)
-figure(4)
-plot3(missingPath(:,2), missingPath(:,1), missingPath(:,3), 'LineWidth',2.0, 'color','b');
-hold on
-plot3( missingWpt(:,2), missingWpt(:,1), missingWpt(:,3), 'ro', 'MarkerSize', R_switch*2.5);
-grid on;
-set(gca, 'ZDir', 'reverse');
-xlabel("East") % y axis
-ylabel("North") % x axis
-zlabel("Downward from sea level") % z axis
-%title("Example of missing path")
-ax = gca; % Get current axes
-ax.FontSize = 18;
+% figure(1)
+% plot3(straightPath(:,2), straightPath(:,1), straightPath(:,3), 'LineWidth',2.0, 'color','b');
+% hold on
+% plot3( straightWpt(:,2), straightWpt(:,1), straightWpt(:,3), 'ro', 'MarkerSize', R_switch*2);
+% grid on;
+% set(gca, 'ZDir', 'reverse');
+% xlabel("East") % y axis
+% ylabel("North") % x axis
+% zlabel("Downward from sea level") % z axis
+% %title("Example of stable path")
+% ax = gca; % Get current axes
+% ax.FontSize = 16;
+% 
+% %subplot(2,2,2)
+% figure(2)
+% plot3(curlyPath(:,2), curlyPath(:,1), curlyPath(:,3), 'LineWidth',2.0, 'color','b');
+% hold on
+% plot3( curlyWpt(:,2), curlyWpt(:,1), curlyWpt(:,3), 'ro', 'MarkerSize', R_switch*2.5);
+% grid on;
+% set(gca, 'ZDir', 'reverse');
+% xlabel("East") % y axis
+% ylabel("North") % x axis
+% zlabel("Downward from sea level") % z axis
+% hold on
+% %title("Example of unstable path")
+% ax = gca; % Get current axes
+% ax.FontSize = 16;
+% 
+% %subplot(2,2,3)
+% %figure(3)
+% %plot3(semiCurlyPath(:,2), semiCurlyPath(:,1), semiCurlyPath(:,3), 'LineWidth',2.0, 'color','b');
+% %hold on
+% %plot3( semiCurlyWpt(:,2), semiCurlyWpt(:,1), semiCurlyWpt(:,3), 'ro', 'MarkerSize', R_switch*2.5);
+% %grid on;
+% %set(gca, 'ZDir', 'reverse');
+% %xlabel("East") % y axis
+% %ylabel("North") % x axis
+% %zlabel("Downward from sea level") % z axis
+% %hold on
+% %title("Example of semi-unstable path")
+% %ax = gca; % Get current axes
+% %ax.FontSize = 16;
+% 
+% %subplot(2,2,4)
+% figure(4)
+% plot3(missingPath(:,2), missingPath(:,1), missingPath(:,3), 'LineWidth',2.0, 'color','b');
+% hold on
+% plot3( missingWpt(:,2), missingWpt(:,1), missingWpt(:,3), 'ro', 'MarkerSize', R_switch*2.5);
+% grid on;
+% set(gca, 'ZDir', 'reverse');
+% xlabel("East") % y axis
+% ylabel("North") % x axis
+% zlabel("Downward from sea level") % z axis
+% %title("Example of missing path")
+% ax = gca; % Get current axes
+% ax.FontSize = 18;
 
 
 %legend("path", "waypoints")
@@ -167,11 +167,32 @@ ax.FontSize = 18;
 % zlabel("Downward from sea level") % z axis
 % hold on
 %legend({"straight path", "straight WP", "semi-curly path", "semi-curly WP", "curly path ", "curly WP", "unstable/ missing path", "unstable/ missing WP"}, 'Location','northwest','NumColumns',2)
+wptext = {'$wp_{1}$','$wp_{2}$','$wp_{3}$','$wp_{4}$','$wp_{5}$','$wp_{6}$','$wp_{7}$'};
+
+x_offset = R_switch; % Adjust the offset as needed
+y_offset = R_switch; % Adjust the offset as needed
+x_offset = ones(7,1)*2*R_switch; % Adjust the offset as needed
+y_offset = ones(7,1)*2*R_switch; % Adjust the offset as needed
+y_offset(1) = 2*y_offset(1);
+x_offset(1) = 2*x_offset(1);
+y_offset(2) = -3*y_offset(2);
+x_offset(3) = -20*x_offset(3);
+y_offset(3) = 3*y_offset(3);
+x_offset(4) = x_offset(4);
+y_offset(4) = -3*y_offset(4);
+y_offset(5) = 2*y_offset(5);
+x_offset(6) = -15*x_offset(6);
+y_offset(6) = 4*y_offset(6);
+y_offset(7) = 0; %y_offset(7)
+x_offset(7) = -25*x_offset(7);
+
 
 figure(5)
 plot(straightPath(:,2), straightPath(:,1), 'LineWidth',2.0, 'color','b');
 hold on
 plot(straightWpt(:,2), straightWpt(:,1), 'ro', 'MarkerSize', R_switch*2.5);
+hold on
+text(straightWpt(:,2)+x_offset, straightWpt(:,1)+y_offset, wptext, 'FontSize',18,'Interpreter', 'latex')
 grid
 xlabel("East") % y axis
 ylabel("North") % x axis
@@ -179,19 +200,45 @@ ax = gca; % Get current axes
 ax.FontSize = 18;
 
 figure(6)
+x_offset = ones(7,1)*2*R_switch; % Adjust the offset as needed
+y_offset = ones(7,1)*2*R_switch; % Adjust the offset as needed
+y_offset(1) = -2*y_offset(1);
+x_offset(1) = 2*x_offset(1);
+x_offset(2) = 4*x_offset(2);
+x_offset(3) = -25*x_offset(3);
+y_offset(3) = 0;%-2*y_offset(3);
+
+x_offset(4) = -25*x_offset(4);
+x_offset(5) = 10*x_offset(5);
+y_offset(5) = 2*y_offset(5);
+%y_offset(5) = 2*y_offset(5);
+x_offset(6) = 13*x_offset(6);
+y_offset(6) = y_offset(5);
+y_offset(7) = 0; %y_offset(7)
+x_offset(7) = -25*x_offset(7);
+
+
 plot(curlyPath(:,2), curlyPath(:,1), 'LineWidth',2.0, 'color','b');
 hold on
 plot(curlyWpt(:,2), curlyWpt(:,1), 'ro', 'MarkerSize', R_switch*2.5);
+hold on
+text(curlyWpt(:,2)+x_offset, curlyWpt(:,1)+y_offset, wptext, 'FontSize',18,'Interpreter', 'latex')
 grid
 xlabel("East") % y axis
 ylabel("North") % x axis
 ax = gca; % Get current axes
 ax.FontSize = 18;
 
+x_offset = ones(7,1)*4*R_switch; % Adjust the offset as needed
+y_offset = ones(7,1)*5*R_switch; % Adjust the offset as needed
+y_offset(1) = -y_offset(1)
+x_offset(7) = -10*x_offset(7)
 figure(7)
 plot(missingPath(:,2), missingPath(:,1), 'LineWidth',2.0, 'color','b');
 hold on
 plot(missingWpt(:,2), missingWpt(:,1), 'ro', 'MarkerSize', R_switch*2.5);
+hold on
+text(missingWpt(:,2)+x_offset, missingWpt(:,1)+y_offset, wptext, 'FontSize',18,'Interpreter', 'latex')
 grid
 xlabel("East") % y axis
 ylabel("North") % x axis
