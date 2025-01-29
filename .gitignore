@@ -1,7 +1,7 @@
 *.DS_Store
 *.asv
 *.sh
-*.gitignore
+.gitignore
 experiments/results-old
 experiments/evaluationFunctions/oldFunctions
 MSS-experiements/
@@ -12,6 +12,8 @@ ExperimentFunctions/results-old
 ExperimentsResults/mariner
 ExperimentsResults/remus100
 ExperimentsResults/nspauv
+slprj/
+Figures/oldFigures
 
 
 

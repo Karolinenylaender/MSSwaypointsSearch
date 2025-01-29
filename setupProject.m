@@ -2,14 +2,13 @@
 addFolderToPath("BIMK-PlatEMO-4.7.0.0/PlatEMO/")
 addFolderToPath("MSS")
 
-addFolderToPath("ShipProblems")
+addFolderToPath("VesselProblems")
 addFolderToPath("NSGA-II-Adapted/")
 
 addFolderToPath("ProcessResultsFunctions/")
 addFolderToPath("ExperimentsResults")
 
-addpath("runExperiment.m")
-addpath("performSearch.m")
+addFolderToPath("WPgen/")
 
 
 savepath;
