@@ -8,7 +8,7 @@ function [subPathPerformance, experimentPerformance] = loadProsessedResults(ship
         load(resultsPath, 'subPathPerformance', 'experimentPerformance')
     else
         % didnt find file - calcuates 
-        [subPathPerformance, experimentPerformance]  = CalculateSearchPerformancePerSubpath(ship, searchProcess, experimentNumber, populationSize, numGenerations);
+        [subPathPerformance, experimentPerformance]  = calculatePerformancePerSubpath(ship, searchProcess, experimentNumber);
         save(resultsPath, 'subPathPerformance', 'experimentPerformance')
     end
 end

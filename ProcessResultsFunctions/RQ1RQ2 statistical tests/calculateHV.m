@@ -33,16 +33,16 @@ function calculateHV(ship)
     WPgenRndScores = calucateStatisticalScores(ship, "WPgenSeed",validExperiments, populationSize, numGenerations,maxObjectives, minObjectives, rndWPgenPopulation, combinedSearches);
 
     % save results
-    resultsPath = append(resultsFolder, "/", ship,"/randomSearch-QI-values.mat");
+    resultsPath = append(resultsFolder, "/", ship,"/RndSearch-QI-values.mat");
     save(resultsPath, 'rndSearchScores')
     
-    resultsPath = append(resultsFolder, "/", ship,"/minDistanceMaxPath-QI-values.mat");
+    resultsPath = append(resultsFolder, "/", ship,"/WPgenSeed-QI-values.mat");
     save(resultsPath, 'WPgenSeedScores')
     
-    resultsPath = append(resultsFolder, "/", ship,"/halfPopSearch-QI-values.mat");
+    resultsPath = append(resultsFolder, "/", ship,"/WPgenComb-QI-values.mat");
     save(resultsPath, 'WPgenCombScores')    
     
-    resultsPath = append(resultsFolder, "/", ship,"/randInit-QI-values.mat");
+    resultsPath = append(resultsFolder, "/", ship,"/WPgenRnd-QI-values.mat");
     save(resultsPath, 'WPgenRndScores')
 
     function scoresMatrix = calucateStatisticalScores(ship, searchProcess,validExperiments, populationSize, numGenerations,maxValues, minValues, searchPopulation, shipPopulation)

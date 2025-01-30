@@ -1,8 +1,10 @@
-function [subPathPerformance, experimentPerformance] = CalculateSearchPerformancePerSubpath(ship, searchProcess, experimentNumber, populationSize, numGenerations)
+function [subPathPerformance, experimentPerformance] = calculatePerformancePerSubpath(ship, searchProcess, experimentNumber)
+    populationSize = 10; 
+    numGenerations = 1000;
+
     experimentPerformance = [];
     subPathPerformance = [];
 
-   
     if ship == "remus100"
         numInitialWaypoints = 6;
         numMetrics = 6;
@@ -10,7 +12,7 @@ function [subPathPerformance, experimentPerformance] = CalculateSearchPerformanc
         numInitialWaypoints = 6;
         numMetrics = 4;
     elseif ship == "mariner"
-        numInitialWaypoints = 6; % 7
+        numInitialWaypoints = 5; 
         numMetrics = 4;
     end
 
@@ -20,14 +22,12 @@ function [subPathPerformance, experimentPerformance] = CalculateSearchPerformanc
         populationPerformanceMatrix = [];
 
         for individualIndex = 1:size(Obj,1)
-            %individual = Dec(individualIndex,:);
+
             individualPath = paths(string(individualIndex));
             fullPath = individualPath('fullpath');
             transitionIndices = individualPath('transitionIndices');
             angles = individualPath('angles');
-            %if size(angles,2) > numMetrics - 1
-            %    angles = angles(:,1:3);
-            %end
+
             
             individualPerformance = extractFeaturesPath(fullPath, angles, transitionIndices);
 
@@ -55,26 +55,10 @@ function [subPathPerformance, experimentPerformance] = CalculateSearchPerformanc
 
             
             numberOfPeaksMatrix = [maxNumberOfPeaks; averageNumberOfPeaks; sumNumberOfPeaks];
-            
-            
 
             subPathPerformance = [subPathPerformance; individualPerformance];
             populationPerformanceMatrix = [populationPerformanceMatrix; [numMissingPaths numberOfPeaksMatrix(:)']];
 
-            % individualPerformance = [numMissingPaths peaksPerformance(:)']
-            % if transitionIndices(1) == length(fullPath)
-            %     % all subpaths are missing
-            %     numMissingPaths = numInitialWaypoints; 
-            % 
-            %     subPathPerformance = -ones(numMissingPaths, numMetrics);
-            % 
-            % elseif length(transitionIndices) < numInitialWaypoints
-            %     % one or more subpaths are missing
-            %     numMissingPaths = numInitialWaypoints - length(transitionIndices);
-            %     missingPathPerformance = -ones(numMissingPaths, numMetrics);
-            %     subPathPerformance = [individualPerformance; missingPathPerformance];
-            % end
-            % experimentPerformance = [experimentPerformance; individualPerformance];
         end
         experimentPerformance = [experimentPerformance; [Obj populationPerformanceMatrix]];
     end
