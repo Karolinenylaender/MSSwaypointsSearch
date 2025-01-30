@@ -78,7 +78,7 @@ Loading this file you can find:
 * * pointsToClose.m
 * * splitDataBetweenWaypoints.m
 * * pathGeneration/ 
-* * * paths for each vessel
+*   * paths for each vessel
 
 
 ## NSGA-II-Adapted/
@@ -89,15 +89,27 @@ Loading this file you can find:
 * savePopulation.m
 
 
-*Evaluate experiments*
-Located inside folder ProcessResultsFolder:
-* pareto_HV/
-* evaluationFunctions/
-* * 
+## Evaluate experiments
+Located inside folder ProcessResultsFolder we have 4 subfolders
+### *RQ1RQ2 statistical tests*  with files:
+* calculateHV.m (calculates hypervolume)
+* plotBoxplots.m (plots the box plots)
+* statisticalTests.m (performs the statisitical test and evaluates with approach is the best)
 
-* categorize path
-* evaluationFunction
-* robustNess
+### *RQ3 path diversity* with files
+* calculatePathDiversity.m (calculates the diversity of the paths)
+* calculatePerformancePerSubpath.m (performs the autocorrelation for each angle)
+* categorizeSubPaths.m (utilize the calculations from calculatePerformancePerSubpath.m to determine the type of path)
 
+### *Transform or visualize data* with subfolders 
+* reshapePopulation/(merges together experiments, makes it easier and faster to load data)
+* visualization/ (different functions for plotting the data)
 
-
+## ExperimentsResults
+The raw data from the experiments are stored in
+ExperimentsResults/ for each vessel
+The subfolder *ProcessedResults/* contain 
+* the extracted the population for each generation 
+* types of paths 
+* statistical tests results
+for each vessel
